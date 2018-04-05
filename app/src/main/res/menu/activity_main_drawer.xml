@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/add_note"
+            android:icon="@drawable/ic_note_add_black_24dp"
+            android:title="Creer une note" />
+        <item
+            android:id="@+id/list_note"
+            android:icon="@drawable/ic_list_black_24dp"
+            android:title="Lister note de frais" />
+
+        <item
+            android:id="@+id/add_client"
+            android:icon="@drawable/ic_person_add_black_24dp"
+            android:title="creer un client" />
+        <item
+            android:id="@+id/view_stats"
+            android:icon="@drawable/ic_pie_chart_black_24dp"
+            android:title="Voir statistique" />
+        <item
+            android:id="@+id/remboursement"
+            android:icon="@drawable/ic_monetization_on_black_24dp"
+            android:title="suivi de rembourqement" />
+    </group>
+
+    <item android:title="Gestion de compte">
+        <menu>
+            <item
+                android:id="@+id/user_account"
+                android:icon="@drawable/ic_account_box_black_24dp"
+                android:title="account" />
+            <item
+                android:id="@+id/user_deco"
+                android:icon="@android:drawable/ic_lock_power_off"
+                android:title="deconnexion" />
+        </menu>
+    </item>
+
+</menu>
