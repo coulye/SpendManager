@@ -13,6 +13,8 @@ import org.json.JSONObject;
 
 import java.util.concurrent.ExecutionException;
 
+import fr.moralesmarie.spendmanager.HttpRequest.HttpPostRequest;
+
 public class LoginActivity extends AppCompatActivity {
 
     final String LOGIN_USER = "usr_login";
@@ -41,7 +43,8 @@ public class LoginActivity extends AppCompatActivity {
         String passSend = MDP.getText().toString();
 
 //        String myUrl = "http://172.20.10.5/REST-API-SY4/public/login.php";
-        String myUrl = "http://127.0.0.1:8080/REST-API-SY4/public/login.php";
+//        String myUrl = "http://127.0.0.1:8080/REST-API-SY4/public/login.php";
+        String myUrl = "http://moralesmarie.alwaysdata.net/public/login.php";
         String params = "mail="+loginSend+"&mdp="+passSend;
 
         HttpPostRequest postRequest = new HttpPostRequest();

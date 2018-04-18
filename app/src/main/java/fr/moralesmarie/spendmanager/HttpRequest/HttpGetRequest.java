@@ -1,4 +1,4 @@
-package fr.moralesmarie.spendmanager;
+package fr.moralesmarie.spendmanager.HttpRequest;
 
 import android.os.AsyncTask;
 
