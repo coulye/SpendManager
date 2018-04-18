@@ -2,7 +2,6 @@ package fr.moralesmarie.spendmanager;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -11,37 +10,48 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.ImageButton;
 import android.widget.Spinner;
 
-public class menu extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class MenuActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private Spinner spinner;
     private static final String[]paths = {"tri par date", "tri par client"};
 
     private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 0;
 
+    private ImageButton btnAddFrais;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
-
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
         spinner = (Spinner)findViewById(R.id.spinner_liste_note);
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(menu.this,
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(MenuActivity.this,
                 android.R.layout.simple_spinner_item,paths);
-
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
+
+        btnAddFrais = (ImageButton) findViewById(R.id.btnAddFrais);
+        btnAddFrais.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intentAddFrais = new Intent(MenuActivity.this, AddFraisActivity.class);
+                startActivity(intentAddFrais);
+            }
+        });
     }
 
     @Override
@@ -56,7 +66,7 @@ public class menu extends AppCompatActivity implements NavigationView.OnNavigati
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
+        // Inflate the MenuActivity; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
@@ -83,22 +93,28 @@ public class menu extends AppCompatActivity implements NavigationView.OnNavigati
         int id = item.getItemId();
 
         if (id == R.id.add_note) {
-
-            Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-                startActivityForResult(takePictureIntent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
-            }
+//            Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+//            if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+//                startActivityForResult(takePictureIntent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
+//            }
+            Intent addNoteIntent = new Intent(MenuActivity.this, AddFraisActivity.class);
+            startActivity(addNoteIntent);
 
         } else if (id == R.id.list_note) {
+            Intent listNoteIntent = new Intent(MenuActivity.this, MenuActivity.class);
 
         } else if (id == R.id.add_client) {
+
+            Intent addClientIntent = new Intent(MenuActivity.this, AddClientActivity.class);
+            startActivity(addClientIntent);
 
         } else if (id == R.id.view_stats) {
 
         } else if (id == R.id.user_account) {
 
         } else if (id == R.id.user_deco) {
-
+            Intent DecoIntent = new Intent(MenuActivity.this, LoginActivity.class);
+            startActivity(DecoIntent);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
