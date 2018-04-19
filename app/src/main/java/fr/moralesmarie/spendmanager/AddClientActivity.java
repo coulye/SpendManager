@@ -105,8 +105,8 @@ public class AddClientActivity extends AppCompatActivity implements NavigationVi
     public String addClient(Client leClient){
         String result = "";
 
-//        String myUrl = "http://172.20.10.5/REST-API-SY4/public/login.php";
-        String myUrl = "http://127.0.0.1:8080/REST-API-SY4/public/client";
+        String myUrl = "http://moralesmarie.alwaysdata.net/public/client";
+//        String myUrl = "http://127.0.0.1:8080/REST-API-SY4/public/client";
         String params =
                         "Titre_Client="+leClient.getTitre_Client()+
                         "&Nom_Client="+leClient.getNom_Client()+

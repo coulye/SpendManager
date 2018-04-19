@@ -2,6 +2,7 @@ package fr.moralesmarie.spendmanager;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.MailTo;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -49,7 +50,7 @@ public class LoginActivity extends AppCompatActivity {
 //       String myUrl = "http://127.0.0.1:8080/REST-API-SY4/public/login.php";
 
         //accès en ligne via le serveur moralesmarie.alwaysdata.net
-        String myUrl = "http://moralesmarie.alwaysdata.net/public/login.php";
+        String myUrl = "http://moralesmarie.alwaysdata.net/public/login";
         String params = "mail="+loginSend+"&mdp="+passSend;
 
         HttpPostRequest postRequest = new HttpPostRequest();
@@ -68,7 +69,18 @@ public class LoginActivity extends AppCompatActivity {
             JSONObject objLogin = new JSONObject(result);
             if (loginSend.equals(objLogin.getString("Mail_Utilisateur")) && passSend.equals(objLogin.get("Mdp_Utilisateur"))){
                 Intent i = new Intent(LoginActivity.this, MenuActivity.class);
-                i.putExtra("objlogin", objLogin.toString());
+
+                // creation et initialisation du bundle
+                Bundle bundle = new Bundle();
+                // affecte les valeur aux parametres
+                //bundle.putString("mailLogin ", objLogin.getString("Mail_Utilisateur"));
+                //bundle.putString("coordLogin ", objLogin.getString("Nom_Utilisateur") + " " + objLogin.getString("Nom_Utilisateur"));
+                //ajout du bundle a l intent
+                i.putExtra("infoLog", objLogin.getString("Mail_Utilisateur"));
+
+                Log.i("obLogin", "variable nom + prenom : "+objLogin.getString("Nom_Utilisateur") + " " + objLogin.getString("Prenom_Utilisateur") );
+                Log.i("obLogin2", "variable mail : "+objLogin.getString("Mail_Utilisateur"));
+
                 startActivity(i);
             } else {
                 Context c = getApplicationContext();
@@ -92,5 +104,7 @@ public class LoginActivity extends AppCompatActivity {
     public void oublie(View view) {
         Intent intent= new Intent(LoginActivity.this, OublieActivity.class );
         startActivity(intent);
+
+
     }
 }

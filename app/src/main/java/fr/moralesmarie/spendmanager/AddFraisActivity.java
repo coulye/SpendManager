@@ -251,8 +251,8 @@ public class AddFraisActivity extends AppCompatActivity implements NavigationVie
         ArrayList<Client> listClient = new ArrayList<Client>();
         String result = "";
 
-        String myUrl = "http://127.0.0.1:8080/REST-API-SY4/public/client";
-
+        //String myUrl = "http://127.0.0.1:8080/REST-API-SY4/public/client";
+        String myUrl = "http://moralesmarie.alwaysdata.net/public/client";
         HttpGetRequest getRequest = new HttpGetRequest();
         try{
             result = getRequest.execute(myUrl).get(); // exécution de la connexion
@@ -262,6 +262,7 @@ public class AddFraisActivity extends AppCompatActivity implements NavigationVie
         } catch (ExecutionException e) {
             e.printStackTrace();
         }
+        System.out.println("Retour HTTPPostRequest : " + result );
         try {
             JSONArray tblJSON = new JSONArray(result);
             for (int i = 0 ; i < tblJSON.length() ; i++) {

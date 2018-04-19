@@ -8,12 +8,22 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.Spinner;
+import android.widget.TextView;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.json.JSONStringer;
+
+import java.io.Serializable;
+
+import fr.moralesmarie.spendmanager.Class.Utilisateur;
 
 public class MenuActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -28,6 +38,10 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu);
+        String mailuser = null;
+        String coorduser = null;
+
+
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -52,6 +66,18 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
                 startActivity(intentAddFrais);
             }
         });
+
+        //recuperation du bundle de l intent dans LoginActivity
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            //extraction de la valeur par la clé
+            mailuser = extras.getString("infoLog");
+
+            //recuperation du texteview mail user
+            TextView mail_user = (TextView)findViewById(R.id.mail_user);
+            //mail_user.setText(mailuser);
+        }
+
     }
 
     @Override
