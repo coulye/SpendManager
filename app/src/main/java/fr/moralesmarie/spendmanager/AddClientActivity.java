@@ -108,15 +108,15 @@ public class AddClientActivity extends AppCompatActivity implements NavigationVi
 //        String myUrl = "http://172.20.10.5/REST-API-SY4/public/login.php";
         String myUrl = "http://127.0.0.1:8080/REST-API-SY4/public/client";
         String params =
-                "titre="+leClient.getTitre_Client()+
-                "&nom="+leClient.getNom_Client()+
-                "&prenom="+leClient.getPrenom_Client()+
-                "&adresse="+leClient.getAdresse_Client()+
-                "&cp="+leClient.getCp_Client()+
-                "&ville="+leClient.getVille_Client()+
-                "&tel="+leClient.getTelephone_Client()+
-                "&mail="+leClient.getMail_Client()+
-                "&rs="+leClient.getRs_Client();
+                        "Titre_Client="+leClient.getTitre_Client()+
+                        "&Nom_Client="+leClient.getNom_Client()+
+                        "&Prenom_Client="+leClient.getPrenom_Client()+
+                        "&Adresse_Client="+leClient.getAdresse_Client()+
+                        "&Cp_Client="+leClient.getCp_Client()+
+                        "&Ville_Client="+leClient.getVille_Client()+
+                        "&Tel_Client="+leClient.getTelephone_Client()+
+                        "&Mail_Client="+leClient.getMail_Client()+
+                        "&Rs_Client="+leClient.getRs_Client();
 
         HttpPostRequest postRequest = new HttpPostRequest();
         try{
