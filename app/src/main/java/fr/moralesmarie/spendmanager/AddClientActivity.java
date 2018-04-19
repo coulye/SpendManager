@@ -114,7 +114,7 @@ public class AddClientActivity extends AppCompatActivity implements NavigationVi
                         "&Adresse_Client="+leClient.getAdresse_Client()+
                         "&Cp_Client="+leClient.getCp_Client()+
                         "&Ville_Client="+leClient.getVille_Client()+
-                        "&Tel_Client="+leClient.getTelephone_Client()+
+                        "&Telephone_Client="+leClient.getTelephone_Client()+
                         "&Mail_Client="+leClient.getMail_Client()+
                         "&Rs_Client="+leClient.getRs_Client();
 
