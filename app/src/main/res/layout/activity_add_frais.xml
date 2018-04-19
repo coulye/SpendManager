@@ -137,125 +137,74 @@
                 android:textAlignment="center"
                 android:textSize="24sp" />
 
-            <LinearLayout
-                android:id="@+id/ligne1Icone"
+            <RadioGroup
+                android:id="@+id/radioGroupMotif"
                 android:layout_width="match_parent"
-                android:layout_height="100dp"
-                android:orientation="horizontal">
-
-                <ImageButton
-                    android:id="@+id/imageButtonRestaurant"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:scaleType="fitXY"
-                    app:srcCompat="@drawable/ic_restaurant_black_24dp" />
-
-                <ImageButton
-                    android:id="@+id/imageButtonPlane"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:scaleType="fitXY"
-                    app:srcCompat="@drawable/ic_airplanemode_active_black_24dp" />
-
-                <ImageButton
-                    android:id="@+id/imageButtonCar"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:scaleType="fitXY"
-                    app:srcCompat="@drawable/ic_directions_car_black_24dp" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/ligne1Radio"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:orientation="horizontal">
+                android:layout_height="match_parent">
 
                 <RadioButton
-                    android:id="@+id/radioRestauranrt"
-                    android:layout_width="79dp"
+                    android:id="@+id/radioGas"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Restaurant" />
-
-                <RadioButton
-                    android:id="@+id/radioPlane"
-                    android:layout_width="79dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Avion" />
-
-                <RadioButton
-                    android:id="@+id/radioCar"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Voiture" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/ligne2Icone"
-                android:layout_width="match_parent"
-                android:layout_height="100dp"
-                android:orientation="horizontal">
-
-                <ImageButton
-                    android:id="@+id/imageButtonTrain"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:scaleType="fitXY"
-                    app:srcCompat="@drawable/ic_train_black_24dp" />
-
-                <ImageButton
-                    android:id="@+id/imageButtonHotel"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:scaleType="fitXY"
-                    app:srcCompat="@drawable/ic_hotel_black_24dp" />
-
-                <ImageButton
-                    android:id="@+id/imageButtonGas"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:scaleType="fitXY"
-                    app:srcCompat="@drawable/ic_local_gas_station_black_24dp" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/ligne2Radio"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:orientation="horizontal">
+                    android:text="Essence" />
 
                 <RadioButton
                     android:id="@+id/radioTrain"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="Train" />
 
                 <RadioButton
                     android:id="@+id/radioHotel"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="Hotel" />
 
                 <RadioButton
-                    android:id="@+id/radioGas"
-                    android:layout_width="wrap_content"
+                    android:id="@+id/radioTaxi"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Essence" />
-            </LinearLayout>
+                    android:text="Taxi" />
+
+                <RadioButton
+                    android:id="@+id/radioParking"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Parking" />
+
+                <RadioButton
+                    android:id="@+id/radioBus"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Bus" />
+
+                <RadioButton
+                    android:id="@+id/radioCar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Voiture" />
+
+                <RadioButton
+                    android:id="@+id/radioRestauranrt"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Restaurant" />
+
+                <RadioButton
+                    android:id="@+id/radioPlane"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Avion" />
+            </RadioGroup>
 
             <LinearLayout
                 android:id="@+id/ligne3Icone"
@@ -289,33 +238,168 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/ligne3Radio"
+                android:id="@+id/ligne1Icone"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
+                android:layout_height="100dp"
                 android:orientation="horizontal">
 
-                <RadioButton
-                    android:id="@+id/radioParking"
+                <ImageButton
+                    android:id="@+id/imageButtonRestaurant"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:text="Parking" />
+                    android:scaleType="fitXY"
+                    app:srcCompat="@drawable/ic_restaurant_black_24dp" />
 
-                <RadioButton
-                    android:id="@+id/radioTaxi"
+                <ImageButton
+                    android:id="@+id/imageButtonPlane"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:text="Taxi" />
+                    android:scaleType="fitXY"
+                    app:srcCompat="@drawable/ic_airplanemode_active_black_24dp" />
 
-                <RadioButton
-                    android:id="@+id/radioBus"
+                <ImageButton
+                    android:id="@+id/imageButtonCar"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:text="Bus" />
+                    android:scaleType="fitXY"
+                    app:srcCompat="@drawable/ic_directions_car_black_24dp" />
             </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ligne2Icone"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:orientation="horizontal">
+
+                <ImageButton
+                    android:id="@+id/imageButtonTrain"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:scaleType="fitXY"
+                    app:srcCompat="@drawable/ic_train_black_24dp" />
+
+                <ImageButton
+                    android:id="@+id/imageButtonHotel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:scaleType="fitXY"
+                    app:srcCompat="@drawable/ic_hotel_black_24dp" />
+
+                <ImageButton
+                    android:id="@+id/imageButtonGas"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:scaleType="fitXY"
+                    app:srcCompat="@drawable/ic_local_gas_station_black_24dp" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/textTrajet"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="A COMPLETER EN CAS DE TRAJET :"
+                android:textAlignment="center"
+                android:textSize="24sp" />
+
+            <TextView
+                android:id="@+id/textDureeTrajet"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Durée du Trajet :"
+                android:textAlignment="center"
+                android:textSize="24sp" />
+
+            <EditText
+                android:id="@+id/dureeTrajet"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="time" />
+
+            <TextView
+                android:id="@+id/textVilleDepart"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Ville de départ :"
+                android:textAlignment="center"
+                android:textSize="24sp" />
+
+            <EditText
+                android:id="@+id/villeDepart"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="textPersonName" />
+
+            <TextView
+                android:id="@+id/textVilleArrivee"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Ville d'arrivée :"
+                android:textAlignment="center"
+                android:textSize="24sp" />
+
+            <EditText
+                android:id="@+id/villeArrivee"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="textPersonName" />
+
+            <TextView
+                android:id="@+id/textDateAller"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Date d'aller du trajet :"
+                android:textAlignment="center"
+                android:textSize="24sp" />
+
+            <EditText
+                android:id="@+id/dateAller"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:focusableInTouchMode="false"
+                android:inputType="date"
+                android:textAlignment="center" />
+
+            <TextView
+                android:id="@+id/textDateRetour"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Date de retour du trajet :"
+                android:textAlignment="center"
+                android:textSize="24sp" />
+
+            <EditText
+                android:id="@+id/dateRetour"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:focusableInTouchMode="false"
+                android:inputType="date"
+                android:textAlignment="center" />
+
+            <TextView
+                android:id="@+id/textKilometre"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Nombre de kilometres (arondir a l'unité) :"
+                android:textAlignment="center"
+                android:textSize="24sp" />
+
+            <EditText
+                android:id="@+id/editKilometre"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="number" />
 
             <LinearLayout
                 android:id="@+id/paiement"

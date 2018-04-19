@@ -17,11 +17,21 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.RadioButton;
 import android.widget.Spinner;
+import android.widget.TextView;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+
+import fr.moralesmarie.spendmanager.Class.Client;
+import fr.moralesmarie.spendmanager.HttpRequest.HttpGetRequest;
 
 public class AddFraisActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
 
@@ -35,12 +45,34 @@ public class AddFraisActivity extends AppCompatActivity implements NavigationVie
     private ImageButton imgBtnParking;
     private ImageButton imgBtnTaxi;
     private ImageButton imgBtnBus;
+    private RadioButton radBtnRest;
+    private RadioButton radBtnPlane;
+    private RadioButton radBtnCar;
+    private RadioButton radBtnTrain;
+    private RadioButton radBtnHotel;
+    private RadioButton radBtnGas;
+    private RadioButton radBtnParking;
+    private RadioButton radBtnTaxi;
+    private RadioButton radBtnBus;
     private ArrayList<ImageButton> tblImgBtn;
 
     Spinner spinner;
 
     private Calendar mCurrentDate;
     private EditText mDateExpense;
+
+    private TextView textDureeTrajet;
+    private EditText dureeTrajet;
+    private TextView textVilleDepard;
+    private EditText villeDepard;
+    private TextView textVilleArrivee;
+    private EditText villeArrivee;
+    private TextView textDateAller;
+    private EditText mDateAller;
+    private TextView textDateRetour;
+    private EditText mDateRetour;
+
+
     private String mont;
     private String days;
 
@@ -67,14 +99,18 @@ public class AddFraisActivity extends AppCompatActivity implements NavigationVie
             }
         });
 
+        ArrayList<Client> listClient = listClient();
+
         //Récupération du Spinner déclaré dans le fichier main.xml de res/layout
         spinner = (Spinner) findViewById(R.id.spinnerClient);
         //Création d'une liste d'élément à mettre dans le Spinner(pour l'exemple)
         List exempleList = new ArrayList();
         exempleList.add("Choisissez un client");
-        exempleList.add("Assinie");
-        exempleList.add("Bassam");
-        exempleList.add("Abidjan");
+
+        for (Client leClient : listClient) {
+            exempleList.add(leClient.getNom_Client()+" "+leClient.getPrenom_Client());
+        }
+
 		/*Le Spinner a besoin d'un adapter pour sa presentation alors on lui passe le context(this) et
                 un fichier de presentation par défaut( android.R.layout.simple_spinner_item)
 		Avec la liste des elements (exemple) */
@@ -94,6 +130,8 @@ public class AddFraisActivity extends AppCompatActivity implements NavigationVie
         final int month = mCurrentDate.get(Calendar.MONTH);
         final int day = mCurrentDate.get(Calendar.DAY_OF_MONTH);
         mDateExpense = (EditText) findViewById(R.id.dateExpense);
+        mDateAller = (EditText) findViewById(R.id.dateAller);
+        mDateRetour = (EditText) findViewById(R.id.dateRetour);
         if(month >= 1 && month <= 9 ){
             mont = "0" + (month+1);
         } else {
@@ -105,7 +143,53 @@ public class AddFraisActivity extends AppCompatActivity implements NavigationVie
             days = "" + day;
         }
         mDateExpense.setText(days + " - " + mont + " - " + year);
+        mDateAller.setText(days + " - " + mont + " - " + year);
+        mDateRetour.setText(days + " - " + mont + " - " + year);
         mDateExpense.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                DatePickerDialog mDatePicker = new DatePickerDialog(AddFraisActivity.this, new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker datePicker, int year, int month, int day) {
+                        if(month >= 1 && month <= 9 ){
+                            mont = "0" + (month+1);
+                        } else {
+                            mont = "" + (month+1);
+                        }
+                        if(day >= 1 && day <= 9){
+                            days = "0" + day;
+                        } else {
+                            days = "" + day;
+                        }
+                        mDateExpense.setText(days + " - " + mont + " - " + year);
+                    }
+                }, year, month, day);
+                mDatePicker.show();
+            }
+        });
+        mDateAller.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                DatePickerDialog mDatePicker = new DatePickerDialog(AddFraisActivity.this, new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker datePicker, int year, int month, int day) {
+                        if(month >= 1 && month <= 9 ){
+                            mont = "0" + (month+1);
+                        } else {
+                            mont = "" + (month+1);
+                        }
+                        if(day >= 1 && day <= 9){
+                            days = "0" + day;
+                        } else {
+                            days = "" + day;
+                        }
+                        mDateExpense.setText(days + " - " + mont + " - " + year);
+                    }
+                }, year, month, day);
+                mDatePicker.show();
+            }
+        });
+        mDateRetour.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 DatePickerDialog mDatePicker = new DatePickerDialog(AddFraisActivity.this, new DatePickerDialog.OnDateSetListener() {
@@ -138,6 +222,18 @@ public class AddFraisActivity extends AppCompatActivity implements NavigationVie
         imgBtnTaxi = (ImageButton) findViewById(R.id.imageButtonTaxi);
         imgBtnTrain = (ImageButton) findViewById(R.id.imageButtonTrain);
 
+        radBtnBus = (RadioButton) findViewById(R.id.radioBus);
+        radBtnCar = (RadioButton) findViewById(R.id.radioCar);
+        radBtnGas = (RadioButton) findViewById(R.id.radioGas);
+        radBtnHotel = (RadioButton) findViewById(R.id.radioHotel);
+        radBtnParking = (RadioButton) findViewById(R.id.radioParking);
+        radBtnPlane = (RadioButton) findViewById(R.id.radioPlane);
+        radBtnRest = (RadioButton) findViewById(R.id.radioRestauranrt);
+        radBtnTaxi = (RadioButton) findViewById(R.id.radioTaxi);
+        radBtnTrain = (RadioButton) findViewById(R.id.radioTrain);
+
+
+
         tblImgBtn = new ArrayList<ImageButton>();
         tblImgBtn.add(imgBtnBus);
         tblImgBtn.add(imgBtnCar);
@@ -149,6 +245,45 @@ public class AddFraisActivity extends AppCompatActivity implements NavigationVie
         tblImgBtn.add(imgBtnTaxi);
         tblImgBtn.add(imgBtnTrain);
 
+    }
+
+    public ArrayList<Client> listClient(){
+        ArrayList<Client> listClient = new ArrayList<Client>();
+        String result = "";
+
+        String myUrl = "http://127.0.0.1:8080/REST-API-SY4/public/client";
+
+        HttpGetRequest getRequest = new HttpGetRequest();
+        try{
+            result = getRequest.execute(myUrl).get(); // exécution de la connexion
+        }
+        catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+        try {
+            JSONArray tblJSON = new JSONArray(result);
+            for (int i = 0 ; i < tblJSON.length() ; i++) {
+                JSONObject jsonObject = tblJSON.getJSONObject(i);
+                Client leClient = new Client(
+                        jsonObject.getInt("Id_Client"),
+                        jsonObject.getString("Titre_Client"),
+                        jsonObject.getString("Nom_Client"),
+                        jsonObject.getString("Prenom_Client"),
+                        jsonObject.getString("Adresse_Client"),
+                        jsonObject.getString("Cp_Client"),
+                        jsonObject.getString("Ville_Client"),
+                        jsonObject.getString("Telephone_Client"),
+                        jsonObject.getString("Mail_Client"),
+                        jsonObject.getString("Rs_Client")
+                );
+                listClient.add(leClient);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return listClient;
     }
 
     @Override

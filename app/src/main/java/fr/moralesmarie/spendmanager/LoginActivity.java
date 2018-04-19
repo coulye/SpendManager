@@ -14,7 +14,7 @@ import org.json.JSONObject;
 
 import java.util.concurrent.ExecutionException;
 
-import fr.moralesmarie.spendmanager.Class.Utilisateur;
+import fr.moralesmarie.spendmanager.HttpRequest.HttpPostRequest;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -43,6 +43,7 @@ public class LoginActivity extends AppCompatActivity {
 
         String loginSend = Identifiant.getText().toString();
         String passSend = MDP.getText().toString();
+
 
         //accès en local
 //       String myUrl = "http://127.0.0.1:8080/REST-API-SY4/public/login.php";

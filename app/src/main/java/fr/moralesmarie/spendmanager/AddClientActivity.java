@@ -1,5 +1,6 @@
 package fr.moralesmarie.spendmanager;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -14,10 +15,12 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
+import android.widget.Toast;
 
 import java.util.concurrent.ExecutionException;
 
 import fr.moralesmarie.spendmanager.Class.Client;
+import fr.moralesmarie.spendmanager.HttpRequest.HttpPostRequest;
 
 public class AddClientActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -83,12 +86,23 @@ public class AddClientActivity extends AppCompatActivity implements NavigationVi
                         mail.getText().toString(),
                         raisonSociale.getText().toString()
                 );
-                addClient(leClient);
+                String result = addClient(leClient);
+                if (result.equals("true\r")){
+                    Context c = getApplicationContext();
+                    Toast msg = Toast.makeText(c, "Le client a bien été ajouté !", Toast.LENGTH_SHORT);
+                    msg.show();
+                    Intent i = new Intent(AddClientActivity.this, AddFraisActivity.class);
+                    startActivity(i);
+                } else {
+                    Context c = getApplicationContext();
+                    Toast msg = Toast.makeText(c, "ERREUR : Echec de l'ajout du client !", Toast.LENGTH_SHORT);
+                    msg.show();
+                }
             }
         });
     }
 
-    public void addClient(Client leClient){
+    public String addClient(Client leClient){
         String result = "";
 
 //        String myUrl = "http://172.20.10.5/REST-API-SY4/public/login.php";
@@ -113,7 +127,7 @@ public class AddClientActivity extends AppCompatActivity implements NavigationVi
         } catch (ExecutionException e) {
             e.printStackTrace();
         }
-//        System.out.println("Retour HTTPPostRequest : " + result + myUrl);
+        return result;
     }
 
     @Override
