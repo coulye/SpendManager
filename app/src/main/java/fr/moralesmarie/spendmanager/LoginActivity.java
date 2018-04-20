@@ -70,17 +70,10 @@ public class LoginActivity extends AppCompatActivity {
             if (loginSend.equals(objLogin.getString("Mail_Utilisateur")) && passSend.equals(objLogin.get("Mdp_Utilisateur"))){
                 Intent i = new Intent(LoginActivity.this, MenuActivity.class);
 
-                // creation et initialisation du bundle
-                Bundle bundle = new Bundle();
-                // affecte les valeur aux parametres
-                //bundle.putString("mailLogin ", objLogin.getString("Mail_Utilisateur"));
-                //bundle.putString("coordLogin ", objLogin.getString("Nom_Utilisateur") + " " + objLogin.getString("Nom_Utilisateur"));
                 //ajout du bundle a l intent
-                i.putExtra("infoLog", objLogin.getString("Mail_Utilisateur"));
-
-                Log.i("obLogin", "variable nom + prenom : "+objLogin.getString("Nom_Utilisateur") + " " + objLogin.getString("Prenom_Utilisateur") );
-                Log.i("obLogin2", "variable mail : "+objLogin.getString("Mail_Utilisateur"));
-
+                i.putExtra("mail_extra", objLogin.getString("Mail_Utilisateur"));
+                i.putExtra("prenom_extra", objLogin.getString("Prenom_Utilisateur"));
+                i.putExtra("nom_extra", objLogin.getString("Nom_Utilisateur"));
                 startActivity(i);
             } else {
                 Context c = getApplicationContext();

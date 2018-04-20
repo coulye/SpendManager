@@ -15,6 +15,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.concurrent.ExecutionException;
@@ -50,8 +51,29 @@ public class AddClientActivity extends AppCompatActivity implements NavigationVi
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
+
+        String mailuser = null;
+        String coorduser = null;
+        TextView mail_user;
+        TextView user_detail;
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        final View headerLayout = navigationView.getHeaderView(0);
         navigationView.setNavigationItemSelectedListener(this);
+        //recuperation du bundle de l intent dans LoginActivity
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            //extraction de la valeur par la clé
+            mailuser = extras.getString("mail_extra");
+            //recuperation du texteview mail user
+            mail_user = (TextView)headerLayout.findViewById(R.id.mail_user);
+            mail_user.setText(mailuser);
+
+            //recuperation du textView du nom et prenom
+            coorduser = extras.getString("prenom_extra")+ " " +extras.getString("nom_extra");
+            //recuperation du texteview mail user
+            user_detail = (TextView)headerLayout.findViewById(R.id.user_detail);
+            user_detail.setText(coorduser);
+        }
 
         madame = (RadioButton) findViewById(R.id.radioMadame);
         monsieur = (RadioButton) findViewById(R.id.radioMonsieur);
