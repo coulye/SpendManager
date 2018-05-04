@@ -1,9 +1,12 @@
-package fr.moralesmarie.spendmanager;
+package fr.moralesmarie.spendmanager.AVoirAQuoiCaSert;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
+
+import fr.moralesmarie.spendmanager.LoginActivity;
+import fr.moralesmarie.spendmanager.R;
 
 
 public class OublieActivity extends Activity {

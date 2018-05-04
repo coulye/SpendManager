@@ -1,4 +1,4 @@
-package fr.moralesmarie.spendmanager;
+package fr.moralesmarie.spendmanager.AVoirAQuoiCaSert;
 
 import android.app.AlertDialog;
 import android.content.Context;

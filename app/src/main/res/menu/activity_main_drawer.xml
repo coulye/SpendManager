@@ -24,7 +24,7 @@
         <item
             android:id="@+id/remboursement"
             android:icon="@drawable/ic_monetization_on_black_24dp"
-            android:title="suivi de rembourqement" />
+            android:title="Suivi de remboursement" />
     </group>
 
     <item android:title="Gestion de compte">

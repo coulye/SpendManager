@@ -15,6 +15,8 @@ import org.json.JSONObject;
 
 import java.util.concurrent.ExecutionException;
 
+import fr.moralesmarie.spendmanager.AVoirAQuoiCaSert.BackgroundWorker;
+import fr.moralesmarie.spendmanager.AVoirAQuoiCaSert.OublieActivity;
 import fr.moralesmarie.spendmanager.HttpRequest.HttpPostRequest;
 
 public class LoginActivity extends AppCompatActivity {
@@ -46,11 +48,12 @@ public class LoginActivity extends AppCompatActivity {
         String passSend = MDP.getText().toString();
 
 
-        //accès en local
-//       String myUrl = "http://127.0.0.1:8080/REST-API-SY4/public/login.php";
-
-        //accès en ligne via le serveur moralesmarie.alwaysdata.net
+//        String myUrl = "http://172.20.10.5/REST-API-SY4/public/login.php";
+//        String myUrl = "http://127.0.0.1:8080/REST-API-SY4/public/login.php";
         String myUrl = "http://moralesmarie.alwaysdata.net/public/login";
+
+
+
         String params = "mail="+loginSend+"&mdp="+passSend;
 
         HttpPostRequest postRequest = new HttpPostRequest();
@@ -86,18 +89,17 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-    public void OnLogin(View view) {
-        String identifiant=Identifiant.getText().toString();
-        String mdp=MDP.getText().toString();
-        String type ="login";
-        BackgroundWorker backgroundWorker = new BackgroundWorker(LoginActivity.this);
-        backgroundWorker.execute(type,identifiant, mdp);
-    }
+//    public void OnLogin(View view) {
+//        String identifiant=Identifiant.getText().toString();
+//        String mdp=MDP.getText().toString();
+//        String type ="login";
+//        BackgroundWorker backgroundWorker = new BackgroundWorker(LoginActivity.this);
+//        backgroundWorker.execute(type,identifiant, mdp);
+//    }
+//
+//    public void oublie(View view) {
+//        Intent intent= new Intent(LoginActivity.this, OublieActivity.class );
+//        startActivity(intent);
+//    }
 
-    public void oublie(View view) {
-        Intent intent= new Intent(LoginActivity.this, OublieActivity.class );
-        startActivity(intent);
-
-
-    }
 }

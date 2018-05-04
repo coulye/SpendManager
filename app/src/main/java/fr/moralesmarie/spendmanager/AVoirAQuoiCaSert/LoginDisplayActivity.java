@@ -1,10 +1,13 @@
-package fr.moralesmarie.spendmanager;
+package fr.moralesmarie.spendmanager.AVoirAQuoiCaSert;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+
+import fr.moralesmarie.spendmanager.LoginActivity;
+import fr.moralesmarie.spendmanager.R;
 
 /**
  * Created by pierrick.pabijan on 03/04/2018.

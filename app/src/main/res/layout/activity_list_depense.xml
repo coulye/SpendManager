@@ -4,44 +4,36 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center_horizontal"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context=".MenuActivity"
-    tools:showIn="@layout/app_bar_main">
+    tools:context=".ListDepenseActivity"
+    tools:showIn="@layout/app_bar_list_depense">
 
     <LinearLayout
-        android:layout_width="368dp"
+        android:id="@+id/linearLayout2"
+        android:layout_width="0dp"
         android:layout_height="0dp"
         android:orientation="vertical"
         app:layout_constraintBottom_toTopOf="@+id/footer"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:layout_editor_absoluteX="8dp">
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <TextView
-            android:id="@+id/titre_acceuil_note"
+            android:id="@+id/textTitreDepense"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Liste des notes de frais"
+            android:text="Liste des dépenses"
             android:textAlignment="center"
-            android:textSize="25sp"
-            android:textStyle="bold"
-            tools:layout_editor_absoluteX="120dp"
-            tools:layout_editor_absoluteY="1dp" />
-
-        <Spinner
-            android:id="@+id/spinner_liste_note"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:gravity="center_horizontal" />
+            android:textSize="30sp" />
 
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
             <TableLayout
-                android:id="@+id/tableLayout"
+                android:id="@+id/tableLayoutDepense"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="match_parent">
 
             </TableLayout>
         </ScrollView>
@@ -51,7 +43,7 @@
     <android.support.constraint.ConstraintLayout
         android:id="@+id/footer"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="52dp"
         android:background="#0d6ebd"
         android:gravity="bottom"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -64,19 +56,8 @@
             tools:layout_editor_absoluteX="16dp"
             tools:layout_editor_absoluteY="73dp">
 
-            <ImageButton
-                android:id="@+id/btnAddFrais"
-                android:layout_width="195dp"
-                android:layout_height="52dp"
-                android:layout_weight="1"
-                android:background="@android:color/transparent"
-                android:scaleType="fitCenter"
-                app:srcCompat="@drawable/ic_add_box_white_24dp" />
-
         </LinearLayout>
 
     </android.support.constraint.ConstraintLayout>
 
 </android.support.constraint.ConstraintLayout>
-
-

@@ -9,43 +9,6 @@
     tools:context=".AddClientActivity"
     tools:showIn="@layout/app_bar_add_client">
 
-    <!--<LinearLayout-->
-        <!--android:id="@+id/header"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="50dp"-->
-        <!--android:background="#0d6ebd"-->
-        <!--android:gravity="top"-->
-        <!--android:orientation="horizontal"-->
-        <!--app:layout_constraintTop_toTopOf="parent">-->
-
-        <!--<ImageView-->
-            <!--android:id="@+id/logo"-->
-            <!--android:layout_width="39dp"-->
-            <!--android:layout_height="match_parent"-->
-            <!--android:layout_weight="1"-->
-            <!--app:srcCompat="@drawable/logo" />-->
-
-        <!--<TextView-->
-            <!--android:id="@+id/titleAddClient"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_weight="1"-->
-            <!--android:paddingTop="7dp"-->
-            <!--android:text="Nouveau Client"-->
-            <!--android:textAlignment="center"-->
-            <!--android:textColor="@android:color/background_light"-->
-            <!--android:textIsSelectable="false"-->
-            <!--android:textSize="30sp"-->
-            <!--android:textStyle="bold" />-->
-
-        <!--<ImageView-->
-            <!--android:id="@+id/burger"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="match_parent"-->
-            <!--android:layout_weight="1"-->
-            <!--app:srcCompat="@drawable/ic_menu_black_24dp" />-->
-    <!--</LinearLayout>-->
-
     <ScrollView
         android:id="@+id/scrollView2"
         android:layout_width="0dp"

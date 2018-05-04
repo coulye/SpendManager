@@ -1,14 +1,24 @@
 package fr.moralesmarie.spendmanager;
 
+import android.Manifest;
 import android.app.DatePickerDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -17,21 +27,31 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import fr.moralesmarie.spendmanager.Class.Client;
+import fr.moralesmarie.spendmanager.Class.Depense;
+import fr.moralesmarie.spendmanager.Class.Frais;
+import fr.moralesmarie.spendmanager.Class.Notefrais;
+import fr.moralesmarie.spendmanager.Class.Trajet;
 import fr.moralesmarie.spendmanager.HttpRequest.HttpGetRequest;
+import fr.moralesmarie.spendmanager.HttpRequest.HttpPostRequest;
 
 public class AddFraisActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
 
@@ -45,36 +65,51 @@ public class AddFraisActivity extends AppCompatActivity implements NavigationVie
     private ImageButton imgBtnParking;
     private ImageButton imgBtnTaxi;
     private ImageButton imgBtnBus;
-    private RadioButton radBtnRest;
-    private RadioButton radBtnPlane;
-    private RadioButton radBtnCar;
-    private RadioButton radBtnTrain;
-    private RadioButton radBtnHotel;
-    private RadioButton radBtnGas;
-    private RadioButton radBtnParking;
-    private RadioButton radBtnTaxi;
-    private RadioButton radBtnBus;
+    private RadioGroup radioGroup;
     private ArrayList<ImageButton> tblImgBtn;
 
     Spinner spinner;
 
     private Calendar mCurrentDate;
-    private EditText mDateExpense;
-
-    private TextView textDureeTrajet;
-    private EditText dureeTrajet;
-    private TextView textVilleDepard;
-    private EditText villeDepard;
-    private TextView textVilleArrivee;
-    private EditText villeArrivee;
-    private TextView textDateAller;
-    private EditText mDateAller;
-    private TextView textDateRetour;
-    private EditText mDateRetour;
-
-
-    private String mont;
+    private String mDate;
+    private String months;
     private String days;
+    private String years;
+    private EditText mDateExpense;
+    private String SQLDateExpense;
+
+    private EditText dureeTrajet;
+    private EditText villeDepard;
+    private EditText villeArrivee;
+    private EditText mDateAller;
+    private String SQLDateAller;
+    private EditText mDateRetour;
+    private String SQLDateRetour;
+    private EditText km;
+    private EditText commentaire;
+    private EditText montant;
+
+    private ImageButton takePictureBtn;
+    private ImageButton addDepense;
+    private Button sendNotefrais;
+
+    private ArrayList<Frais> listFrais;
+    private ArrayList<Trajet> listTrajet;
+
+    //PHOTO
+    private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 0;
+
+    private static String[] PERMISSIONS_STORAGE_CAMERA = {
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            Manifest.permission.CAMERA,
+            Manifest.permission.CAPTURE_VIDEO_OUTPUT,
+            Manifest.permission.CAPTURE_AUDIO_OUTPUT
+    };
+
+    private ImageView mImageThumbnail;
+    private Uri imageUri;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -120,29 +155,16 @@ public class AddFraisActivity extends AppCompatActivity implements NavigationVie
             }
         });
 
-        ArrayList<Client> listClient = listClient();
-
-        //Récupération du Spinner déclaré dans le fichier main.xml de res/layout
+        //SPINNER CLIENT
+        final ArrayList<Client> listClient = listClient();
         spinner = (Spinner) findViewById(R.id.spinnerClient);
-        //Création d'une liste d'élément à mettre dans le Spinner(pour l'exemple)
         List exempleList = new ArrayList();
         exempleList.add("Choisissez un client");
-
         for (Client leClient : listClient) {
             exempleList.add(leClient.getNom_Client()+" "+leClient.getPrenom_Client());
         }
-
-		/*Le Spinner a besoin d'un adapter pour sa presentation alors on lui passe le context(this) et
-                un fichier de presentation par défaut( android.R.layout.simple_spinner_item)
-		Avec la liste des elements (exemple) */
-        ArrayAdapter adapter = new ArrayAdapter(
-                this,
-                android.R.layout.simple_spinner_item,
-                exempleList
-        );
-               /* On definit une présentation du spinner quand il est déroulé         (android.R.layout.simple_spinner_dropdown_item) */
+        ArrayAdapter adapter = new ArrayAdapter(this,android.R.layout.simple_spinner_item, exempleList);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        //Enfin on passe l'adapter au Spinner et c'est tout
         spinner.setAdapter(adapter);
 
         //POP-UP CALENDRIER
@@ -154,18 +176,23 @@ public class AddFraisActivity extends AppCompatActivity implements NavigationVie
         mDateAller = (EditText) findViewById(R.id.dateAller);
         mDateRetour = (EditText) findViewById(R.id.dateRetour);
         if(month >= 1 && month <= 9 ){
-            mont = "0" + (month+1);
+            months = "0" + (month+1);
         } else {
-            mont = "" + (month+1);
+            months = "" + (month+1);
         }
         if(day >= 1 && day <= 9){
             days = "0" + day;
         } else {
             days = "" + day;
         }
-        mDateExpense.setText(days + " - " + mont + " - " + year);
-        mDateAller.setText(days + " - " + mont + " - " + year);
-        mDateRetour.setText(days + " - " + mont + " - " + year);
+        years = String.valueOf(year);
+        mDateExpense.setText(days + " - " + months + " - " + year);
+        mDateAller.setText(days + " - " + months + " - " + year);
+        mDateRetour.setText(days + " - " + months + " - " + year);
+        mDate = year + "-" + months + "-" + days;
+        SQLDateExpense = year+"-"+months+"-"+days;
+        SQLDateAller = year+"-"+months+"-"+days;
+        SQLDateRetour = year+"-"+months+"-"+days;
         mDateExpense.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -173,16 +200,17 @@ public class AddFraisActivity extends AppCompatActivity implements NavigationVie
                     @Override
                     public void onDateSet(DatePicker datePicker, int year, int month, int day) {
                         if(month >= 1 && month <= 9 ){
-                            mont = "0" + (month+1);
+                            months = "0" + (month+1);
                         } else {
-                            mont = "" + (month+1);
+                            months = "" + (month+1);
                         }
                         if(day >= 1 && day <= 9){
                             days = "0" + day;
                         } else {
                             days = "" + day;
                         }
-                        mDateExpense.setText(days + " - " + mont + " - " + year);
+                        mDateExpense.setText(days + " - " + months + " - " + year);
+                        SQLDateExpense = year+"-"+months+"-"+days;
                     }
                 }, year, month, day);
                 mDatePicker.show();
@@ -195,16 +223,17 @@ public class AddFraisActivity extends AppCompatActivity implements NavigationVie
                     @Override
                     public void onDateSet(DatePicker datePicker, int year, int month, int day) {
                         if(month >= 1 && month <= 9 ){
-                            mont = "0" + (month+1);
+                            months = "0" + (month+1);
                         } else {
-                            mont = "" + (month+1);
+                            months = "" + (month+1);
                         }
                         if(day >= 1 && day <= 9){
                             days = "0" + day;
                         } else {
                             days = "" + day;
                         }
-                        mDateExpense.setText(days + " - " + mont + " - " + year);
+                        mDateAller.setText(days + " - " + months + " - " + year);
+                        SQLDateAller = year+"-"+months+"-"+days;
                     }
                 }, year, month, day);
                 mDatePicker.show();
@@ -217,16 +246,17 @@ public class AddFraisActivity extends AppCompatActivity implements NavigationVie
                     @Override
                     public void onDateSet(DatePicker datePicker, int year, int month, int day) {
                         if(month >= 1 && month <= 9 ){
-                            mont = "0" + (month+1);
+                            months = "0" + (month+1);
                         } else {
-                            mont = "" + (month+1);
+                            months = "" + (month+1);
                         }
                         if(day >= 1 && day <= 9){
                             days = "0" + day;
                         } else {
                             days = "" + day;
                         }
-                        mDateExpense.setText(days + " - " + mont + " - " + year);
+                        mDateRetour.setText(days + " - " + months + " - " + year);
+                        SQLDateRetour = year+"-"+months+"-"+days;
                     }
                 }, year, month, day);
                 mDatePicker.show();
@@ -243,18 +273,6 @@ public class AddFraisActivity extends AppCompatActivity implements NavigationVie
         imgBtnTaxi = (ImageButton) findViewById(R.id.imageButtonTaxi);
         imgBtnTrain = (ImageButton) findViewById(R.id.imageButtonTrain);
 
-        radBtnBus = (RadioButton) findViewById(R.id.radioBus);
-        radBtnCar = (RadioButton) findViewById(R.id.radioCar);
-        radBtnGas = (RadioButton) findViewById(R.id.radioGas);
-        radBtnHotel = (RadioButton) findViewById(R.id.radioHotel);
-        radBtnParking = (RadioButton) findViewById(R.id.radioParking);
-        radBtnPlane = (RadioButton) findViewById(R.id.radioPlane);
-        radBtnRest = (RadioButton) findViewById(R.id.radioRestauranrt);
-        radBtnTaxi = (RadioButton) findViewById(R.id.radioTaxi);
-        radBtnTrain = (RadioButton) findViewById(R.id.radioTrain);
-
-
-
         tblImgBtn = new ArrayList<ImageButton>();
         tblImgBtn.add(imgBtnBus);
         tblImgBtn.add(imgBtnCar);
@@ -266,14 +284,189 @@ public class AddFraisActivity extends AppCompatActivity implements NavigationVie
         tblImgBtn.add(imgBtnTaxi);
         tblImgBtn.add(imgBtnTrain);
 
+        radioGroup = (RadioGroup) findViewById(R.id.radioGroupMotif);
+
+        commentaire = (EditText) findViewById(R.id.commentaireFrais);
+        dureeTrajet = (EditText) findViewById(R.id.dureeTrajet);
+        villeDepard = (EditText) findViewById(R.id.villeDepart);
+        villeArrivee = (EditText) findViewById(R.id.villeArrivee);
+        km = (EditText) findViewById(R.id.editKilometre);
+        montant = (EditText) findViewById(R.id.champPrixDepense);
+        takePictureBtn = (ImageButton) findViewById(R.id.imageButtonPhoto);
+        mImageThumbnail = (ImageView) findViewById(R.id.imageThumbnail);
+        addDepense = (ImageButton) findViewById(R.id.imageAddDepense);
+        sendNotefrais = (Button) findViewById(R.id.btnValider);
+
+        listFrais = new ArrayList<Frais>();
+        listTrajet = new ArrayList<Trajet>();
+
+        takePictureBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+//                Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+//                if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+//                    startActivityForResult(takePictureIntent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
+//                }
+                int permission = ActivityCompat.checkSelfPermission(getApplicationContext(),
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE);
+                if (permission != PackageManager.PERMISSION_GRANTED) {
+
+                    ActivityCompat.requestPermissions(
+                            AddFraisActivity.this, PERMISSIONS_STORAGE_CAMERA,
+                            CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE
+                    );
+                } else {
+                    takePictureIntent();
+                }
+            }
+        });
+
+
+        addDepense.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //ajout en mémoire de la dépense en cours
+                RadioButton radioSelect = (RadioButton) findViewById(radioGroup.getCheckedRadioButtonId());
+                if (radioSelect.getText().toString().equals("Essence") || radioSelect.getText().toString().equals("Hotel") ||
+                        radioSelect.getText().toString().equals("Parking") || radioSelect.getText().toString().equals("Restaurant")){
+                    Frais leFrais = new Frais(
+                            SQLDateExpense,
+                            0,
+                            null,
+                            radioSelect.getText().toString(),
+                            commentaire.getText().toString(),
+                            Float.parseFloat(montant.getText().toString()),
+                            0
+                    );
+                    listFrais.add(leFrais);
+                } else if (radioSelect.getText().toString().equals("Train") || radioSelect.getText().toString().equals("Taxi") ||
+                        radioSelect.getText().toString().equals("Bus") || radioSelect.getText().toString().equals("Autoroute") ||
+                        radioSelect.getText().toString().equals("Avion")) {
+                    Trajet leTrajet = new Trajet(
+                            dureeTrajet.getText().toString(),
+                            villeDepard.getText().toString(),
+                            villeArrivee.getText().toString(),
+                            SQLDateAller,
+                            SQLDateRetour,
+                            Float.parseFloat(km.getText().toString()),
+                            0,
+                            null,
+                            radioSelect.getText().toString(),
+                            commentaire.getText().toString(),
+                            Float.parseFloat(montant.getText().toString()),
+                            0
+                    );
+                    listTrajet.add(leTrajet);
+                }
+
+                //remise à zéro
+                spinner.setSelection(0);
+                commentaire.setText("");
+                radioSelect.setChecked(false);
+                mDateExpense.setText(days + " - " + months + " - " + year);
+                dureeTrajet.setText("");
+                villeDepard.setText("");
+                villeArrivee.setText("");
+                mDateAller.setText(days + " - " + months + " - " + year);
+                mDateRetour.setText(days + " - " + months + " - " + year);
+                km.setText("");
+                montant.setText("");
+            }
+        });
+        sendNotefrais.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                RadioButton radioSelect = (RadioButton) findViewById(radioGroup.getCheckedRadioButtonId());
+                if (!montant.getText().toString().equals("") && !commentaire.getText().toString().equals("")) {
+                    //ajout en mémoire de la dépense en cours
+                    if (radioSelect.getText().toString().equals("Essence") || radioSelect.getText().toString().equals("Hotel") ||
+                            radioSelect.getText().toString().equals("Parking") || radioSelect.getText().toString().equals("Restaurant")) {
+                        Frais leFrais = new Frais(
+                                SQLDateExpense,
+                                0,
+                                null,
+                                radioSelect.getText().toString(),
+                                commentaire.getText().toString(),
+                                Float.parseFloat(montant.getText().toString()),
+                                0
+                        );
+                        listFrais.add(leFrais);
+                    } else if (radioSelect.getText().toString().equals("Train") || radioSelect.getText().toString().equals("Taxi") ||
+                            radioSelect.getText().toString().equals("Bus") || radioSelect.getText().toString().equals("Autoroute") ||
+                            radioSelect.getText().toString().equals("Avion")) {
+                        Trajet leTrajet = new Trajet(
+                                dureeTrajet.getText().toString(),
+                                villeDepard.getText().toString(),
+                                villeArrivee.getText().toString(),
+                                SQLDateAller,
+                                SQLDateRetour,
+                                Float.parseFloat(km.getText().toString()),
+                                0,
+                                null,
+                                radioSelect.getText().toString(),
+                                commentaire.getText().toString(),
+                                Float.parseFloat(montant.getText().toString()),
+                                0
+                        );
+                        listTrajet.add(leTrajet);
+                    }
+                }
+
+                //création note de frais
+                if (listTrajet.isEmpty() && listFrais.isEmpty()) {
+                    Context c = getApplicationContext();
+                    Toast msg = Toast.makeText(c, "Vous n'avez enregistré aucune dépense !", Toast.LENGTH_SHORT);
+                    msg.show();
+                } else {
+                    String leClient = spinner.getSelectedItem().toString();
+                    if (leClient.equals("Choisissez un client")) {
+                        Context c = getApplicationContext();
+                        Toast msg = Toast.makeText(c, "Veuillez choisir un client !", Toast.LENGTH_SHORT);
+                        msg.show();
+                    } else {
+                        int idClient = 0;
+                        for (Client c : listClient) {
+                            if (leClient.equals(c.getNom_Client() + " " + c.getPrenom_Client())) {
+                                idClient = c.getId_Client();
+                                break;
+                            }
+                        }
+                        Notefrais laNotefrais = new Notefrais(0, mDate, mDate, 1, idClient);
+                        int idNotefrais = addNotefrais(laNotefrais);
+                        String result = addDepense(listTrajet, listFrais, idNotefrais);
+                        Context c = getApplicationContext();
+                        Toast msg = Toast.makeText(c, "La note de frais à bien été ajoutée !", Toast.LENGTH_SHORT);
+                        msg.show();
+
+                        //remise à zéro
+                        spinner.setSelection(0);
+                        commentaire.setText("");
+                        radioSelect.setChecked(false);
+                        mDateExpense.setText(days + " - " + months + " - " + year);
+                        dureeTrajet.setText("");
+                        villeDepard.setText("");
+                        villeArrivee.setText("");
+                        mDateAller.setText(days + " - " + months + " - " + year);
+                        mDateRetour.setText(days + " - " + months + " - " + year);
+                        km.setText("");
+                        montant.setText("");
+                        //remise à zero des collections de dépense
+                        listFrais.clear();
+                        listTrajet.clear();
+                    }
+                }
+            }
+        });
     }
 
     public ArrayList<Client> listClient(){
         ArrayList<Client> listClient = new ArrayList<Client>();
         String result = "";
 
-        //String myUrl = "http://127.0.0.1:8080/REST-API-SY4/public/client";
+//        String myUrl = "http://127.0.0.1:8080/REST-API-SY4/public/client";
         String myUrl = "http://moralesmarie.alwaysdata.net/public/client";
+
+
         HttpGetRequest getRequest = new HttpGetRequest();
         try{
             result = getRequest.execute(myUrl).get(); // exécution de la connexion
@@ -306,6 +499,116 @@ public class AddFraisActivity extends AppCompatActivity implements NavigationVie
             e.printStackTrace();
         }
         return listClient;
+    }
+
+    public int addNotefrais(Notefrais laNotefrais){
+        String result = "";
+        int idNotefrais;
+
+//        String myUrl = "http://172.20.10.5/REST-API-SY4/public/login.php";
+//        String myUrl = "http://127.0.0.1:8080/REST-API-SY4/public/client";
+        String myUrl = "http://moralesmarie.alwaysdata.net/public/utilisateur/1/notefrais";
+        String params =
+                "Date_Notefrais="+laNotefrais.getDate_Notefrais()+
+                "&DateSoumission_Notefrais="+laNotefrais.getDateSoumission_Notefrais()+
+                "&Id_Utilisateur="+laNotefrais.getId_Utilisateur()+
+                "&Id_Client="+laNotefrais.getId_Client();
+
+        HttpPostRequest postRequest = new HttpPostRequest();
+        try{
+            result = postRequest.execute(new String []{myUrl, params}).get();
+        }
+        catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+        String[] stringId = result.split("[^ 0-9]");
+        return idNotefrais = Integer.parseInt(stringId[1]);
+    }
+
+    public String addDepense(ArrayList<Trajet> listTrajet, ArrayList<Frais> listFrais, int idNotefrais){
+        String result = "";
+
+        for (Frais frais : listFrais) {
+    //        String myUrl = "http://172.20.10.5/REST-API-SY4/public/login.php";
+    //        String myUrl = "http://127.0.0.1:8080/REST-API-SY4/public/client";
+            String myUrl = "http://moralesmarie.alwaysdata.net/public/notefrais/"+idNotefrais+"/depense";
+            String params =
+                    "DatePaiement_Depense=0000-01-01" +
+                    "&Libelle_Depense=" + frais.getLibelle_Depense() +
+                    "&Commentaire_Depense=" + frais.getCommentaire_Depense() +
+                    "&MontantRemboursement_Depense=" + frais.getMontantRemboursement_Depense() +
+                    "&Id_Notefrais=" + idNotefrais +
+                    "&Date_Frais=" + frais.getDate_Frais() +
+                    "&type=frais";
+
+            HttpPostRequest postRequest = new HttpPostRequest();
+            try{
+                result = postRequest.execute(new String []{myUrl, params}).get();
+            }
+            catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            }
+        }
+        for (Trajet trajet : listTrajet) {
+            //        String myUrl = "http://172.20.10.5/REST-API-SY4/public/login.php";
+            //        String myUrl = "http://127.0.0.1:8080/REST-API-SY4/public/client";
+            String myUrl = "http://moralesmarie.alwaysdata.net/public/notefrais/"+idNotefrais+"/depense";
+            String params =
+                    "DatePaiement_Depense=0000-01-01" +
+                    "&Libelle_Depense=" + trajet.getLibelle_Depense() +
+                    "&Commentaire_Depense=" + trajet.getCommentaire_Depense() +
+                    "&MontantRemboursement_Depense=" + trajet.getMontantRemboursement_Depense() +
+                    "&Id_Notefrais=" + idNotefrais +
+                    "&Duree_Trajet=" + trajet.getDuree_Trajet() +
+                    "&VilleDepart_Trajet=" + trajet.getVilleDepart_Trajet() +
+                    "&VilleArrivee_Trajet=" + trajet.getVilleArrivee_Trajet() +
+                    "&DateAller_Trajet=" + trajet.getDateAller_Trajet() +
+                    "&DateRetour_Trajet=" + trajet.getDateRetour_Trajet() +
+                    "&Kilometre_Trajet=" + trajet.getKilometre_Trajet() +
+                    "&type=trajet";
+
+            HttpPostRequest postRequest = new HttpPostRequest();
+            try{
+                result = postRequest.execute(new String []{myUrl, params}).get();
+            }
+            catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            }
+        }
+        return result;
+    }
+
+    private void takePictureIntent() {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        Log.v("Path image", this.getExternalFilesDir(Environment.DIRECTORY_DCIM).getAbsolutePath());
+        imageUri = Uri.fromFile(new File(this.getExternalFilesDir(Environment.DIRECTORY_DCIM), "justificatif_" + String.valueOf(System.currentTimeMillis()) + ".jpg"));
+        takePictureIntent.putExtra(android.provider.MediaStore.EXTRA_OUTPUT, imageUri);
+        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+            startActivityForResult(takePictureIntent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
+            if (resultCode == RESULT_OK) {
+                retrieveCapturedPicture();
+            }
+        }
+    }
+
+    private void retrieveCapturedPicture() {
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inPreferredConfig = Bitmap.Config.ARGB_8888;
+        Bitmap bitmap = BitmapFactory.decodeFile(imageUri.getPath(), options);
+        mImageThumbnail.setImageBitmap(bitmap);
     }
 
     @Override
@@ -347,15 +650,12 @@ public class AddFraisActivity extends AppCompatActivity implements NavigationVie
         int id = item.getItemId();
 
         if (id == R.id.add_note) {
-//            Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-//            if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-//                startActivityForResult(takePictureIntent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
-//            }
             Intent addNoteIntent = new Intent(AddFraisActivity.this, AddFraisActivity.class);
             startActivity(addNoteIntent);
 
         } else if (id == R.id.list_note) {
             Intent listNoteIntent = new Intent(AddFraisActivity.this, MenuActivity.class);
+            startActivity(listNoteIntent);
 
         } else if (id == R.id.add_client) {
 
@@ -363,6 +663,8 @@ public class AddFraisActivity extends AppCompatActivity implements NavigationVie
             startActivity(addClientIntent);
 
         } else if (id == R.id.view_stats) {
+            Intent graphIntent = new Intent(AddFraisActivity.this, GraphActivity.class);
+            startActivity(graphIntent);
 
         } else if (id == R.id.user_account) {
 

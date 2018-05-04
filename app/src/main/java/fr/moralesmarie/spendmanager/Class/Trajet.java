@@ -12,6 +12,10 @@ public class Trajet extends Depense {
     private String DateRetour_Trajet;
     private float Kilometre_Trajet;
 
+    public Trajet() {
+        super();
+    }
+
     public Trajet(String Duree_Trajet, String VilleDepart_Trajet, String VilleArrivee_Trajet, String DateAller_Trajet, String DateRetour_Trajet, float Kilometre_Trajet, int Id_Depense, String DatePaiement_Depense, String Libelle_Depense, String Commentaire_Depense, float MontantRemboursement_Depense, int Id_Notefrais) {
         super(Id_Depense, DatePaiement_Depense, Libelle_Depense, Commentaire_Depense, MontantRemboursement_Depense, Id_Notefrais);
         this.Duree_Trajet = Duree_Trajet;
