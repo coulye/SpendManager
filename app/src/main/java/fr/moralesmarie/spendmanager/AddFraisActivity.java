@@ -122,8 +122,29 @@ public class AddFraisActivity extends AppCompatActivity implements NavigationVie
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
+
+        String mailuser = null;
+        String coorduser = null;
+        TextView mail_user;
+        TextView user_detail;
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        final View headerLayout = navigationView.getHeaderView(0);
         navigationView.setNavigationItemSelectedListener(this);
+        //recuperation du bundle de l intent dans LoginActivity
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            //extraction de la valeur par la clé
+            mailuser = extras.getString("mail_extra");
+            //recuperation du texteview mail user
+            mail_user = (TextView)headerLayout.findViewById(R.id.mail_user);
+            mail_user.setText(mailuser);
+
+            //recuperation du textView du nom et prenom
+            coorduser = extras.getString("prenom_extra")+ " " +extras.getString("nom_extra");
+            //recuperation du texteview mail user
+            user_detail = (TextView)headerLayout.findViewById(R.id.user_detail);
+            user_detail.setText(coorduser);
+        }
 
         btnAddClient = (Button) findViewById(R.id.btnAddClient);
         btnAddClient.setOnClickListener(new View.OnClickListener() {
@@ -445,6 +466,7 @@ public class AddFraisActivity extends AppCompatActivity implements NavigationVie
 //        String myUrl = "http://127.0.0.1:8080/REST-API-SY4/public/client";
         String myUrl = "http://moralesmarie.alwaysdata.net/public/client";
 
+
         HttpGetRequest getRequest = new HttpGetRequest();
         try{
             result = getRequest.execute(myUrl).get(); // exécution de la connexion
@@ -454,6 +476,7 @@ public class AddFraisActivity extends AppCompatActivity implements NavigationVie
         } catch (ExecutionException e) {
             e.printStackTrace();
         }
+        System.out.println("Retour HTTPPostRequest : " + result );
         try {
             JSONArray tblJSON = new JSONArray(result);
             for (int i = 0 ; i < tblJSON.length() ; i++) {

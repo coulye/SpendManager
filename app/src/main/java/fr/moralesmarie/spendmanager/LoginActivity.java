@@ -2,6 +2,7 @@ package fr.moralesmarie.spendmanager;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.MailTo;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -46,18 +47,13 @@ public class LoginActivity extends AppCompatActivity {
         String loginSend = Identifiant.getText().toString();
         String passSend = MDP.getText().toString();
 
-<<<<<<< HEAD
+
 //        String myUrl = "http://172.20.10.5/REST-API-SY4/public/login.php";
 //        String myUrl = "http://127.0.0.1:8080/REST-API-SY4/public/login.php";
         String myUrl = "http://moralesmarie.alwaysdata.net/public/login";
-=======
 
-        //accès en local
-//       String myUrl = "http://127.0.0.1:8080/REST-API-SY4/public/login.php";
 
-        //accès en ligne via le serveur moralesmarie.alwaysdata.net
-        String myUrl = "http://moralesmarie.alwaysdata.net/public/login.php";
->>>>>>> 693b5c3ab10b081ed2ee318f3c1f9cc52a1e4ac6
+
         String params = "mail="+loginSend+"&mdp="+passSend;
 
         HttpPostRequest postRequest = new HttpPostRequest();
@@ -76,7 +72,11 @@ public class LoginActivity extends AppCompatActivity {
             JSONObject objLogin = new JSONObject(result);
             if (loginSend.equals(objLogin.getString("Mail_Utilisateur")) && passSend.equals(objLogin.get("Mdp_Utilisateur"))){
                 Intent i = new Intent(LoginActivity.this, MenuActivity.class);
-                i.putExtra("objlogin", objLogin.toString());
+
+                //ajout du bundle a l intent
+                i.putExtra("mail_extra", objLogin.getString("Mail_Utilisateur"));
+                i.putExtra("prenom_extra", objLogin.getString("Prenom_Utilisateur"));
+                i.putExtra("nom_extra", objLogin.getString("Nom_Utilisateur"));
                 startActivity(i);
             } else {
                 Context c = getApplicationContext();
@@ -101,4 +101,5 @@ public class LoginActivity extends AppCompatActivity {
 //        Intent intent= new Intent(LoginActivity.this, OublieActivity.class );
 //        startActivity(intent);
 //    }
+
 }

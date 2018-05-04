@@ -9,7 +9,9 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+
 import android.view.LayoutInflater;
+
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -17,6 +19,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
+
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -31,6 +34,7 @@ import java.util.concurrent.ExecutionException;
 import fr.moralesmarie.spendmanager.Class.Client;
 import fr.moralesmarie.spendmanager.Class.Notefrais;
 import fr.moralesmarie.spendmanager.HttpRequest.HttpGetRequest;
+
 
 public class MenuActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -55,8 +59,29 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
+
+        String mailuser = null;
+        String coorduser = null;
+        TextView mail_user;
+        TextView user_detail;
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        final View headerLayout = navigationView.getHeaderView(0);
         navigationView.setNavigationItemSelectedListener(this);
+        //recuperation du bundle de l intent dans LoginActivity
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            //extraction de la valeur par la clé
+            mailuser = extras.getString("mail_extra");
+            //recuperation du texteview mail user
+            mail_user = (TextView)headerLayout.findViewById(R.id.mail_user);
+            mail_user.setText(mailuser);
+
+            //recuperation du textView du nom et prenom
+            coorduser = extras.getString("prenom_extra")+ " " +extras.getString("nom_extra");
+            //recuperation du texteview mail user
+            user_detail = (TextView)headerLayout.findViewById(R.id.user_detail);
+            user_detail.setText(coorduser);
+        }
 
         spinner = (Spinner)findViewById(R.id.spinner_liste_note);
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(MenuActivity.this,
@@ -100,6 +125,7 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
                 startActivity(intentAddFrais);
             }
         });
+
     }
 
     public ArrayList<Notefrais> listNotefrais(int idUtilisateur){
