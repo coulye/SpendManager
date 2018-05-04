@@ -106,17 +106,18 @@ public class AddClientActivity extends AppCompatActivity implements NavigationVi
         String result = "";
 
 //        String myUrl = "http://172.20.10.5/REST-API-SY4/public/login.php";
-        String myUrl = "http://127.0.0.1:8080/REST-API-SY4/public/client";
+//        String myUrl = "http://127.0.0.1:8080/REST-API-SY4/public/client";
+        String myUrl = "http://moralesmarie.alwaysdata.net/public/client";
         String params =
-                "titre="+leClient.getTitre_Client()+
-                "&nom="+leClient.getNom_Client()+
-                "&prenom="+leClient.getPrenom_Client()+
-                "&adresse="+leClient.getAdresse_Client()+
-                "&cp="+leClient.getCp_Client()+
-                "&ville="+leClient.getVille_Client()+
-                "&tel="+leClient.getTelephone_Client()+
-                "&mail="+leClient.getMail_Client()+
-                "&rs="+leClient.getRs_Client();
+                "Titre_Client="+leClient.getTitre_Client()+
+                "&Nom_Client="+leClient.getNom_Client()+
+                "&Prenom_Client="+leClient.getPrenom_Client()+
+                "&Adresse_Client="+leClient.getAdresse_Client()+
+                "&Cp_Client="+leClient.getCp_Client()+
+                "&Ville_Client="+leClient.getVille_Client()+
+                "&Telephone_Client="+leClient.getTelephone_Client()+
+                "&Mail_Client="+leClient.getMail_Client()+
+                "&Rs_Client="+leClient.getRs_Client();
 
         HttpPostRequest postRequest = new HttpPostRequest();
         try{
@@ -169,15 +170,12 @@ public class AddClientActivity extends AppCompatActivity implements NavigationVi
         int id = item.getItemId();
 
         if (id == R.id.add_note) {
-//            Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-//            if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-//                startActivityForResult(takePictureIntent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
-//            }
             Intent addNoteIntent = new Intent(AddClientActivity.this, AddFraisActivity.class);
             startActivity(addNoteIntent);
 
         } else if (id == R.id.list_note) {
             Intent listNoteIntent = new Intent(AddClientActivity.this, MenuActivity.class);
+            startActivity(listNoteIntent);
 
         } else if (id == R.id.add_client) {
 
@@ -185,6 +183,8 @@ public class AddClientActivity extends AppCompatActivity implements NavigationVi
             startActivity(addClientIntent);
 
         } else if (id == R.id.view_stats) {
+            Intent graphIntent = new Intent(AddClientActivity.this, GraphActivity.class);
+            startActivity(graphIntent);
 
         } else if (id == R.id.user_account) {
 

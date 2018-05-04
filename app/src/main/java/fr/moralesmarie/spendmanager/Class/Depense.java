@@ -16,6 +16,9 @@ public class Depense {
     //    protected NoteFrais laNotefrais;
     protected ArrayList<Justificatif> lesJustificatifs;
 
+    public Depense() {
+    }
+
     public Depense(int Id_Depense, String DatePaiement_Depense, String Libelle_Depense, String Commentaire_Depense, float MontantRemboursement_Depense, int Id_Notefrais) {
         this.Id_Depense = Id_Depense;
         this.DatePaiement_Depense = DatePaiement_Depense;
