@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -31,6 +32,7 @@ import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.json.JSONArray;
@@ -98,6 +100,7 @@ public class AddFraisActivity extends AppCompatActivity implements NavigationVie
     private ImageView mImageThumbnail;
     private Uri imageUri;
 
+	final String LOGIN_USER = "user_profile";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -110,8 +113,27 @@ public class AddFraisActivity extends AppCompatActivity implements NavigationVie
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
+        
+		//menu nav header - info user
+		String mailuser = null;
+        String coorduser = null;
+        TextView mail_user;
+        TextView user_detail;
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        final View headerLayout = navigationView.getHeaderView(0);
         navigationView.setNavigationItemSelectedListener(this);
+        SharedPreferences myPref = getSharedPreferences(LOGIN_USER, Context.MODE_PRIVATE);
+        Intent i = getIntent();
+        if (i != null) {
+            mailuser =  myPref.getString("loginSend", mailuser);
+            System.out.println("mailuser : "+mailuser);
+            mail_user = (TextView)headerLayout.findViewById(R.id.mail_user);
+            mail_user.setText(mailuser);
+
+            coorduser = myPref.getString("prenom_extra", coorduser)+ " " + myPref.getString("nom_extra", coorduser);
+            user_detail = (TextView)headerLayout.findViewById(R.id.user_detail);
+            user_detail.setText(coorduser);
+        }
 
         btnAddClient = (Button) findViewById(R.id.btnAddClient);
         btnAddClient.setOnClickListener(new View.OnClickListener() {

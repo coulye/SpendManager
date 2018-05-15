@@ -1,6 +1,8 @@
 package fr.moralesmarie.spendmanager;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -33,6 +35,8 @@ public class ListDepenseActivity extends AppCompatActivity implements Navigation
     private int idNotefrais;
     private TableLayout table;
     private TextView textTitreDepense;
+	
+	final String LOGIN_USER = "user_profile";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,8 +49,27 @@ public class ListDepenseActivity extends AppCompatActivity implements Navigation
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
+
+		//menu nav header - info user
+		String mailuser = null;
+        String coorduser = null;
+        TextView mail_user;
+        TextView user_detail;
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        final View headerLayout = navigationView.getHeaderView(0);
         navigationView.setNavigationItemSelectedListener(this);
+        SharedPreferences myPref = getSharedPreferences(LOGIN_USER, Context.MODE_PRIVATE);
+        Intent i = getIntent();
+        if (i != null) {
+            mailuser =  myPref.getString("loginSend", mailuser);
+            System.out.println("mailuser : "+mailuser);
+            mail_user = (TextView)headerLayout.findViewById(R.id.mail_user);
+            mail_user.setText(mailuser);
+
+            coorduser = myPref.getString("prenom_extra", coorduser)+ " " + myPref.getString("nom_extra", coorduser);
+            user_detail = (TextView)headerLayout.findViewById(R.id.user_detail);
+            user_detail.setText(coorduser);
+        }
 
         Intent intentNotefrais = getIntent();
         idNotefrais = Integer.parseInt(intentNotefrais.getStringExtra("id_notefrais"));
