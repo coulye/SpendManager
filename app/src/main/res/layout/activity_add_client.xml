@@ -32,10 +32,11 @@
                 android:id="@+id/textInfoEntreprise"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingTop="20dp"
+                android:paddingTop="5dp"
                 android:text="Informations client :"
                 android:textAlignment="center"
-                android:textSize="24sp" />
+                android:textSize="30sp"
+                android:textStyle="bold" />
 
             <RadioGroup
                 android:id="@+id/radioGroup"

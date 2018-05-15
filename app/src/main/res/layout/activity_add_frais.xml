@@ -28,6 +28,15 @@
             android:orientation="vertical"
             android:textAlignment="center">
 
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Ajouter Note de Frais"
+                android:textAlignment="center"
+                android:textSize="30sp"
+                android:textStyle="bold" />
+
             <LinearLayout
                 android:id="@+id/addClient"
                 android:layout_width="match_parent"
@@ -64,12 +73,21 @@
                 android:layout_height="39dp"
                 android:autofillHints="Choix du client" />
 
+            <TextView
+                android:id="@+id/textCommentaire"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="20dp"
+                android:text="Commentaires :"
+                android:textAlignment="center"
+                android:textSize="24sp"
+                android:textStyle="bold"/>
+
             <EditText
                 android:id="@+id/commentaireFrais"
                 android:layout_width="match_parent"
-                android:layout_height="150dp"
+                android:layout_height="wrap_content"
                 android:ems="10"
-                android:hint="Commentaires"
                 android:inputType="textMultiLine" />
 
             <TextView
@@ -79,7 +97,8 @@
                 android:paddingTop="20dp"
                 android:text="Motif de la note de frais :"
                 android:textAlignment="center"
-                android:textSize="24sp" />
+                android:textSize="24sp"
+                android:textStyle="bold"/>
 
             <RadioGroup
                 android:id="@+id/radioGroupMotif"
@@ -89,159 +108,112 @@
                 <RadioButton
                     android:id="@+id/radioGas"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="50dp"
                     android:layout_weight="1"
-                    android:text="Essence" />
+                    android:background="@drawable/checkbox_background"
+                    android:button="@drawable/ic_local_gas_station_black_24dp"
+                    android:layout_marginTop="10dp"
+                    android:paddingLeft="10dp"
+                    android:text="Essence"
+                    android:textSize="20dp"/>
 
                 <RadioButton
                     android:id="@+id/radioTrain"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="50dp"
                     android:layout_weight="1"
-                    android:text="Train" />
+                    android:background="@drawable/checkbox_background"
+                    android:button="@drawable/ic_train_black_24dp"
+                    android:layout_marginTop="10dp"
+                    android:paddingLeft="10dp"
+                    android:text="Train"
+                    android:textSize="20dp"/>
 
                 <RadioButton
                     android:id="@+id/radioHotel"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="50dp"
                     android:layout_weight="1"
-                    android:text="Hotel" />
+                    android:background="@drawable/checkbox_background"
+                    android:button="@drawable/ic_hotel_black_24dp"
+                    android:layout_marginTop="10dp"
+                    android:paddingLeft="10dp"
+                    android:text="Hotel"
+                    android:textSize="20dp"/>
 
                 <RadioButton
                     android:id="@+id/radioTaxi"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="50dp"
                     android:layout_weight="1"
-                    android:text="Taxi" />
+                    android:background="@drawable/checkbox_background"
+                    android:button="@drawable/ic_local_taxi_black_24dp"
+                    android:layout_marginTop="10dp"
+                    android:paddingLeft="10dp"
+                    android:text="Taxi"
+                    android:textSize="20dp"/>
 
                 <RadioButton
                     android:id="@+id/radioParking"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="50dp"
                     android:layout_weight="1"
-                    android:text="Parking" />
+                    android:background="@drawable/checkbox_background"
+                    android:button="@drawable/ic_local_parking_black_24dp"
+                    android:layout_marginTop="10dp"
+                    android:paddingLeft="10dp"
+                    android:text="Parking"
+                    android:textSize="20dp"/>
 
                 <RadioButton
                     android:id="@+id/radioBus"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="50dp"
                     android:layout_weight="1"
-                    android:text="Bus" />
+                    android:background="@drawable/checkbox_background"
+                    android:button="@drawable/ic_directions_bus_black_24dp"
+                    android:layout_marginTop="10dp"
+                    android:paddingLeft="10dp"
+                    android:text="Bus"
+                    android:textSize="20dp"/>
 
                 <RadioButton
                     android:id="@+id/radioCar"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="50dp"
                     android:layout_weight="1"
-                    android:text="Autoroute" />
+                    android:background="@drawable/checkbox_background"
+                    android:button="@drawable/ic_directions_car_black_24dp"
+                    android:layout_marginTop="10dp"
+                    android:paddingLeft="10dp"
+                    android:text="Autoroute"
+                    android:textSize="20dp"/>
 
                 <RadioButton
                     android:id="@+id/radioRestauranrt"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="50dp"
                     android:layout_weight="1"
-                    android:text="Restaurant" />
+                    android:background="@drawable/checkbox_background"
+                    android:button="@drawable/ic_restaurant_black_24dp"
+                    android:layout_marginTop="10dp"
+                    android:paddingLeft="10dp"
+                    android:text="Restaurant"
+                    android:textSize="20dp"/>
 
                 <RadioButton
                     android:id="@+id/radioPlane"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="50dp"
                     android:layout_weight="1"
-                    android:text="Avion" />
+                    android:background="@drawable/checkbox_background"
+                    android:button="@drawable/ic_airplanemode_active_black_24dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:paddingLeft="10dp"
+                    android:text="Avion"
+                    android:textSize="20dp"/>
             </RadioGroup>
-
-            <LinearLayout
-                android:id="@+id/ligne3Icone"
-                android:layout_width="match_parent"
-                android:layout_height="100dp"
-                android:orientation="horizontal">
-
-                <ImageButton
-                    android:id="@+id/imageButtonParking"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:scaleType="fitXY"
-                    app:srcCompat="@drawable/ic_local_parking_black_24dp" />
-
-                <ImageButton
-                    android:id="@+id/imageButtonTaxi"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:scaleType="fitXY"
-                    app:srcCompat="@drawable/ic_local_taxi_black_24dp" />
-
-                <ImageButton
-                    android:id="@+id/imageButtonBus"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:scaleType="fitXY"
-                    app:srcCompat="@drawable/ic_directions_bus_black_24dp" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/ligne1Icone"
-                android:layout_width="match_parent"
-                android:layout_height="100dp"
-                android:orientation="horizontal">
-
-                <ImageButton
-                    android:id="@+id/imageButtonRestaurant"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:scaleType="fitXY"
-                    app:srcCompat="@drawable/ic_restaurant_black_24dp" />
-
-                <ImageButton
-                    android:id="@+id/imageButtonPlane"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:scaleType="fitXY"
-                    app:srcCompat="@drawable/ic_airplanemode_active_black_24dp" />
-
-                <ImageButton
-                    android:id="@+id/imageButtonCar"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:scaleType="fitXY"
-                    app:srcCompat="@drawable/ic_directions_car_black_24dp" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/ligne2Icone"
-                android:layout_width="match_parent"
-                android:layout_height="100dp"
-                android:orientation="horizontal">
-
-                <ImageButton
-                    android:id="@+id/imageButtonTrain"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:scaleType="fitXY"
-                    app:srcCompat="@drawable/ic_train_black_24dp" />
-
-                <ImageButton
-                    android:id="@+id/imageButtonHotel"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:scaleType="fitXY"
-                    app:srcCompat="@drawable/ic_hotel_black_24dp" />
-
-                <ImageButton
-                    android:id="@+id/imageButtonGas"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:scaleType="fitXY"
-                    app:srcCompat="@drawable/ic_local_gas_station_black_24dp" />
-            </LinearLayout>
 
             <TextView
                 android:id="@+id/textFRAIS"
@@ -249,7 +221,8 @@
                 android:layout_height="wrap_content"
                 android:text="A COMPLETER EN CAS DE FRAIS :"
                 android:textAlignment="center"
-                android:textSize="24sp" />
+                android:textSize="24sp"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/textDateFrais"
@@ -275,7 +248,8 @@
                 android:layout_height="wrap_content"
                 android:text="A COMPLETER EN CAS DE TRAJET :"
                 android:textAlignment="center"
-                android:textSize="24sp" />
+                android:textSize="24sp"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/textDureeTrajet"
@@ -385,7 +359,8 @@
                     android:layout_weight="1"
                     android:text="Montant de la dépense :"
                     android:textAlignment="textEnd"
-                    android:textSize="24sp" />
+                    android:textSize="24sp"
+                    android:textStyle="bold"/>
 
                 <EditText
                     android:id="@+id/champPrixDepense"
@@ -404,7 +379,8 @@
                 android:paddingTop="20dp"
                 android:text="Photo du justificatif :"
                 android:textAlignment="center"
-                android:textSize="24sp" />
+                android:textSize="24sp"
+                android:textStyle="bold"/>
 
             <android.support.constraint.ConstraintLayout
                 android:layout_width="match_parent"

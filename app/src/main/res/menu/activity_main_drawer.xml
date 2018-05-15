@@ -21,10 +21,6 @@
             android:id="@+id/view_stats"
             android:icon="@drawable/ic_pie_chart_black_24dp"
             android:title="Voir statistique" />
-        <item
-            android:id="@+id/remboursement"
-            android:icon="@drawable/ic_monetization_on_black_24dp"
-            android:title="Suivi de remboursement" />
     </group>
 
     <item android:title="Gestion de compte">

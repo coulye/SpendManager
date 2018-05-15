@@ -138,8 +138,8 @@ public class GraphActivity extends AppCompatActivity implements NavigationView.O
                 +countRestaurant+","+countAutoroute+","+countBus+","+countParking+","+countTaxi+","
                 +countHotel+","+countTrain+","+countEssence+"" +
                 "&chco=800000|A0522D|D2691E|DAA520|BC8F8F|DEB887|FFDEAD|FFEBCD|F0FFFF" +
-                "&chl="+percentAvion+"%|"+percentRestaurant+"%|"+percentAutoroute+"%|"+percentBus+"%|"
-                +percentParking+"%|"+percentTaxi+"%|"+percentHotel+"%|"+percentTrain+"%|"+percentEssence+"%" +
+                "&chl="+String.format("%.2f",percentAvion)+"%|"+String.format("%.2f",percentRestaurant)+"%|"+String.format("%.2f",percentAutoroute)+"%|"+String.format("%.2f",percentBus)+"%|"
+                +String.format("%.2f",percentParking)+"%|"+String.format("%.2f",percentTaxi)+"%|"+String.format("%.2f",percentHotel)+"%|"+String.format("%.2f",percentTrain)+"%|"+String.format("%.2f", percentEssence)+"%" +
                 "&chdl=Avion|Restaurant|Autoroute|Bus|Parking|Taxi|Hotel|Train|Essence" +
                 "&chdlp=b");
 
