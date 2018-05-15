@@ -1,6 +1,8 @@
 package fr.moralesmarie.spendmanager;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -10,8 +12,10 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
+import android.widget.TextView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -58,6 +62,8 @@ public class GraphActivity extends AppCompatActivity implements NavigationView.O
     private WebView webViewGraphMontant;
     private int idUtilisateur = 1;
     private ArrayList<Depense> listDepenses;
+	
+	final String LOGIN_USER = "user_profile";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,8 +76,27 @@ public class GraphActivity extends AppCompatActivity implements NavigationView.O
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
+        
+		//menu nav header - info user
+		String mailuser = null;
+        String coorduser = null;
+        TextView mail_user;
+        TextView user_detail;
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        final View headerLayout = navigationView.getHeaderView(0);
         navigationView.setNavigationItemSelectedListener(this);
+        SharedPreferences myPref = getSharedPreferences(LOGIN_USER, Context.MODE_PRIVATE);
+        Intent i = getIntent();
+        if (i != null) {
+            mailuser =  myPref.getString("loginSend", mailuser);
+            System.out.println("mailuser : "+mailuser);
+            mail_user = (TextView)headerLayout.findViewById(R.id.mail_user);
+            mail_user.setText(mailuser);
+
+            coorduser = myPref.getString("prenom_extra", coorduser)+ " " + myPref.getString("nom_extra", coorduser);
+            user_detail = (TextView)headerLayout.findViewById(R.id.user_detail);
+            user_detail.setText(coorduser);
+        }
 
         listDepenses = listDepensesUtilisateur(idUtilisateur);
         for (Depense d : listDepenses) {
