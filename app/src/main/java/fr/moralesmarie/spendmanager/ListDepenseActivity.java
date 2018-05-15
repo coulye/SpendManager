@@ -32,6 +32,7 @@ public class ListDepenseActivity extends AppCompatActivity implements Navigation
     ArrayList<Depense> lesDepenses;
     private int idNotefrais;
     private TableLayout table;
+    private TextView textTitreDepense;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +51,9 @@ public class ListDepenseActivity extends AppCompatActivity implements Navigation
         Intent intentNotefrais = getIntent();
         idNotefrais = Integer.parseInt(intentNotefrais.getStringExtra("id_notefrais"));
 
+        textTitreDepense = (TextView) findViewById(R.id.textTitreDepense);
+        textTitreDepense.setText("Liste des dépenses de la note de frais n° " + idNotefrais);
+
         lesDepenses = listDepenses(idNotefrais);
         LayoutInflater inflater = getLayoutInflater();
         table = (TableLayout) findViewById(R.id.tableLayoutDepense);
@@ -60,6 +64,7 @@ public class ListDepenseActivity extends AppCompatActivity implements Navigation
             final String commentaire = d.getCommentaire_Depense();
             final String montant = String.valueOf(d.getMontantRemboursement_Depense());
             final String idNotefrais = String.valueOf(d.getId_Notefrais());
+            final String etatRemboursement = etatRemboursement(d.getId_Depense());
             TableRow tr = (TableRow) inflater.inflate(R.layout.tablerow_depense, null);
             switch (libelle) {
                 case "Essence":
@@ -90,6 +95,16 @@ public class ListDepenseActivity extends AppCompatActivity implements Navigation
                     ((ImageView) tr.findViewById(R.id.imageViewDepense)).setImageResource(R.drawable.ic_airplanemode_active_black_24dp);
                     break;
             }
+            switch (etatRemboursement){
+                case "false":
+                    ((ImageView) tr.findViewById(R.id.imageRefund)).setImageResource(R.drawable.if_circle_red_10282);
+                    break;
+                case "Attente":
+                    ((ImageView) tr.findViewById(R.id.imageRefund)).setImageResource(R.drawable.if_loading_1055035);
+                    break;
+                case "Rembourse":
+                    ((ImageView) tr.findViewById(R.id.imageRefund)).setImageResource(R.drawable.if_money_299107);
+            }
             ((TextView) tr.findViewById(R.id.textIdDepense)).setText("N° : "+idDepense);
             ((TextView) tr.findViewById(R.id.textDatePaiement)).setText("Date paiement : "+date_paiement);
             ((TextView) tr.findViewById(R.id.textCommentaires)).setText("Commentaire : "+commentaire);
@@ -110,6 +125,31 @@ public class ListDepenseActivity extends AppCompatActivity implements Navigation
             table.addView(tr);
         }
 
+    }
+
+    public String etatRemboursement(int idDepense){
+        String result = "";
+
+        String myUrl = "http://moralesmarie.alwaysdata.net/public/depense/"+idDepense+"/validation";
+
+        HttpGetRequest getRequest = new HttpGetRequest();
+        try{
+            result = getRequest.execute(myUrl).get();
+        }
+        catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+//        if (!result.equals("false")){
+            try {
+                JSONObject jsonObject = new JSONObject(result);
+                result = jsonObject.getString("Etat_Validation");
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+//        }
+        return result;
     }
 
     public ArrayList<Depense> listDepenses(int idNotefrais){

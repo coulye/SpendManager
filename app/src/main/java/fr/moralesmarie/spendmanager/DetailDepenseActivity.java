@@ -11,11 +11,13 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import java.util.concurrent.ExecutionException;
 
@@ -25,14 +27,35 @@ import fr.moralesmarie.spendmanager.HttpRequest.HttpGetRequest;
 
 public class DetailDepenseActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
-    private TextView titreDepense;
-
     private int idDepense;
     private String datePaiement;
     private String libelle;
     private String commentaire;
     private float montant;
     private int idNotefrais;
+
+    private TextView titreDepense;
+    private ImageView imageViewType;
+    private TextView textDatePaiement;
+    private TextView textLibelle;
+    private TextView textCommentaire;
+    private TextView textMontant;
+    private TextView textIdNotefrais;
+    private TextView titreDateFrais;
+    private TextView textDateFrais;
+    private TextView titreDuree;
+    private TextView textDuree;
+    private TextView titreVilleDepard;
+    private TextView textVilleDepard;
+    private TextView titreVilleArrivee;
+    private TextView textVilleArrivee;
+    private TextView titreDateAller;
+    private TextView textDateAller;
+    private TextView titreDateRetour;
+    private TextView textDateRetour;
+    private TextView titreKilometre;
+    private TextView textKilometre;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,7 +72,26 @@ public class DetailDepenseActivity extends AppCompatActivity implements Navigati
         navigationView.setNavigationItemSelectedListener(this);
 
         titreDepense = (TextView) findViewById(R.id.textTitreDetailDepense);
-        TextView test = (TextView) findViewById(R.id.test);
+        imageViewType = (ImageView) findViewById(R.id.imageViewType);
+        textDatePaiement = (TextView) findViewById(R.id.textDatePaiement);
+        textLibelle = (TextView) findViewById(R.id.textLibelle);
+        textCommentaire = (TextView) findViewById(R.id.textCommentaire);
+        textMontant = (TextView) findViewById(R.id.textMontant);
+        textIdNotefrais = (TextView) findViewById(R.id.textIdNotefrais);
+        titreDateFrais = (TextView) findViewById(R.id.titreDateFrais2);
+        textDateFrais = (TextView) findViewById(R.id.textDatefrais2);
+        titreDuree = (TextView) findViewById(R.id.titreDuree);
+        textDuree = (TextView) findViewById(R.id.textDuree);
+        titreVilleDepard = (TextView) findViewById(R.id.titreVilleDepard);
+        textVilleDepard = (TextView) findViewById(R.id.textVilleDepard);
+        titreVilleArrivee = (TextView) findViewById(R.id.titreVilleArrivee);
+        textVilleArrivee = (TextView) findViewById(R.id.textVilleArrivee);
+        titreDateAller = (TextView) findViewById(R.id.titreDateAller);
+        textDateAller = (TextView) findViewById(R.id.textDateAller);
+        titreDateRetour = (TextView) findViewById(R.id.titreDateRetour);
+        textDateRetour = (TextView) findViewById(R.id.textDateRetour);
+        titreKilometre = (TextView) findViewById(R.id.titreKilometre);
+        textKilometre = (TextView) findViewById(R.id.textKilometre);
 
         Intent intentDepense = getIntent();
         idDepense = Integer.parseInt(intentDepense.getStringExtra("id_depense"));
@@ -59,15 +101,72 @@ public class DetailDepenseActivity extends AppCompatActivity implements Navigati
         montant = Float.parseFloat(intentDepense.getStringExtra("montant"));
         idNotefrais = Integer.parseInt(intentDepense.getStringExtra("id_notefrais"));
 
+        switch (libelle) {
+            case "Essence":
+                imageViewType.setImageResource(R.drawable.ic_local_gas_station_black_24dp);
+                break;
+            case "Train":
+                imageViewType.setImageResource(R.drawable.ic_train_black_24dp);
+                break;
+            case "Hotel":
+                imageViewType.setImageResource(R.drawable.ic_hotel_black_24dp);
+                break;
+            case "Taxi":
+                imageViewType.setImageResource(R.drawable.ic_local_taxi_black_24dp);
+                break;
+            case "Parking":
+                imageViewType.setImageResource(R.drawable.ic_local_parking_black_24dp);
+                break;
+            case "Bus":
+                imageViewType.setImageResource(R.drawable.ic_directions_bus_black_24dp);
+                break;
+            case "Autoroute":
+                imageViewType.setImageResource(R.drawable.ic_directions_car_black_24dp);
+                break;
+            case "Restaurant":
+                imageViewType.setImageResource(R.drawable.ic_restaurant_black_24dp);
+                break;
+            case "Avion":
+                imageViewType.setImageResource(R.drawable.ic_airplanemode_active_black_24dp);
+                break;
+        }
+        textDatePaiement.setText(datePaiement);
+        textLibelle.setText(libelle);
+        textCommentaire.setText(commentaire);
+        textMontant.setText(montant + " €");
+        textIdNotefrais.setText("Note de frais N° " + idNotefrais);
+
         if (libelle.equals("Essence") || libelle.equals("Hotel") || libelle.equals("Parking") || libelle.equals("Restaurant")) {
             titreDepense.setText("Détails du Frais N° " + idDepense);
-            Frais lefrais = catchFrais(idDepense);
-            test.setVisibility(View.INVISIBLE);
+            Frais leFrais = catchFrais(idDepense);
+            titreDuree.setVisibility(View.INVISIBLE);
+            textDuree.setVisibility(View.INVISIBLE);
+            titreVilleDepard.setVisibility(View.INVISIBLE);
+            textVilleDepard.setVisibility(View.INVISIBLE);
+            titreVilleArrivee.setVisibility(View.INVISIBLE);
+            textVilleArrivee.setVisibility(View.INVISIBLE);
+            titreDateAller.setVisibility(View.INVISIBLE);
+            textDateAller.setVisibility(View.INVISIBLE);
+            titreDateRetour.setVisibility(View.INVISIBLE);
+            textDateRetour.setVisibility(View.INVISIBLE);
+            titreKilometre.setVisibility(View.INVISIBLE);
+            textKilometre.setVisibility(View.INVISIBLE);
+
+            textDateFrais.setText(leFrais.getDate_Frais());
+
 
         } else if (libelle.equals("Train") || libelle.equals("Taxi") || libelle.equals("Bus") || libelle.equals("Autoroute") || libelle.equals("Avion")) {
             titreDepense.setText("Détails du Trajet N° " + idDepense);
             Trajet leTrajet = catchTrajet(idDepense);
-            test.setText(libelle);
+            titreDateFrais.setVisibility(View.INVISIBLE);
+            textDateFrais.setVisibility(View.INVISIBLE);
+
+            textDuree.setText(leTrajet.getDuree_Trajet());
+            textVilleDepard.setText(leTrajet.getVilleDepart_Trajet());
+            textVilleArrivee.setText(leTrajet.getVilleArrivee_Trajet());
+            textDateAller.setText(leTrajet.getDateAller_Trajet());
+            textDateRetour.setText(leTrajet.getDateRetour_Trajet());
+            textKilometre.setText(String.valueOf(leTrajet.getKilometre_Trajet()));
         }
     }
 

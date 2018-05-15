@@ -1,7 +1,6 @@
 package fr.moralesmarie.spendmanager;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -9,17 +8,15 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-
 import android.view.LayoutInflater;
-
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
+import android.widget.ImageView;
 import android.widget.Spinner;
-
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -29,23 +26,23 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.concurrent.ExecutionException;
 
 import fr.moralesmarie.spendmanager.Class.Client;
 import fr.moralesmarie.spendmanager.Class.Notefrais;
 import fr.moralesmarie.spendmanager.HttpRequest.HttpGetRequest;
 
-
 public class MenuActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private Spinner spinner;
-    private static final String[]paths = {"tri par date", "tri par client"};
+    private static final String[]paths = {"Tri par date", "Tri par client", "Uniquement validées", "Uniquement partiellement validées", "Uniquement non validées"};
 
     private TableLayout table;
     private ArrayList<Notefrais> lesNotefrais;
     private ArrayList<Client> lesClients;
     private int idUtilisateur = 1;
-    private ImageButton btnVoirDepense;
     private ImageButton btnAddFrais;
 
     @Override
@@ -59,29 +56,8 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
-
-        String mailuser = null;
-        String coorduser = null;
-        TextView mail_user;
-        TextView user_detail;
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        final View headerLayout = navigationView.getHeaderView(0);
         navigationView.setNavigationItemSelectedListener(this);
-        //recuperation du bundle de l intent dans LoginActivity
-        Bundle extras = getIntent().getExtras();
-        if (extras != null) {
-            //extraction de la valeur par la clé
-            mailuser = extras.getString("mail_extra");
-            //recuperation du texteview mail user
-            mail_user = (TextView)headerLayout.findViewById(R.id.mail_user);
-            mail_user.setText(mailuser);
-
-            //recuperation du textView du nom et prenom
-            coorduser = extras.getString("prenom_extra")+ " " +extras.getString("nom_extra");
-            //recuperation du texteview mail user
-            user_detail = (TextView)headerLayout.findViewById(R.id.user_detail);
-            user_detail.setText(coorduser);
-        }
 
         spinner = (Spinner)findViewById(R.id.spinner_liste_note);
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(MenuActivity.this,
@@ -89,33 +65,207 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
 
-        lesNotefrais = listNotefrais(idUtilisateur);
-        lesClients = listClients();
-        LayoutInflater inflater = getLayoutInflater();
+        final LayoutInflater inflater = getLayoutInflater();
         table = (TableLayout) findViewById(R.id.tableLayout);
-        for (Notefrais n : lesNotefrais) {
-            final String idNotefrais = String.valueOf(n.getId_Notefrais());
-            String leClient = "";
-            for (Client c : lesClients) {
-                if (c.getId_Client() == n.getId_Client()){
-                    leClient = c.getNom_Client()+" "+c.getPrenom_Client();
-                    break;
+
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String tri = spinner.getSelectedItem().toString();
+                if (tri.equals("Tri par date")){
+                    table.removeAllViewsInLayout();
+                    lesNotefrais = listNotefraisByDate(idUtilisateur);
+                    lesClients = listClients();
+                    for (Notefrais n : lesNotefrais) {
+                        final String idNotefrais = String.valueOf(n.getId_Notefrais());
+                        int validation[] = etatValidation(n.getId_Notefrais());
+                        int diff = validation[0]-validation[1];
+                        String leClient = "";
+                        for (Client c : lesClients) {
+                            if (c.getId_Client() == n.getId_Client()){
+                                leClient = c.getNom_Client()+" "+c.getPrenom_Client();
+                                break;
+                            }
+                        }
+                        TableRow tr = (TableRow) inflater.inflate(R.layout.tablerow_notefrais, null);
+                        if (diff == 0 ){
+                            ((ImageView) tr.findViewById(R.id.imageEtat)).setImageResource(R.drawable.if_circle_green_10280);
+                        } else if (validation[1] == 0){
+                            ((ImageView) tr.findViewById(R.id.imageEtat)).setImageResource(R.drawable.if_circle_red_10282);
+                        } else {
+                            ((ImageView) tr.findViewById(R.id.imageEtat)).setImageResource(R.drawable.if_circle_orange_10281_version2);
+                        }
+                        ((TextView) tr.findViewById(R.id.textIdNotefrais)).setText("N° : "+idNotefrais);
+                        ((TextView) tr.findViewById(R.id.textDateNotefrais)).setText("Date : "+n.getDate_Notefrais());
+                        ((TextView) tr.findViewById(R.id.textNomClient)).setText("Client : "+leClient);
+                        tr.findViewById(R.id.btnVoirDepense).setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Intent intentListDepense = new Intent(MenuActivity.this, ListDepenseActivity.class);
+                                intentListDepense.putExtra("id_notefrais", idNotefrais);
+                                startActivity(intentListDepense);
+                            }
+                        });
+                        table.addView(tr);
+                    }
+                } else if (tri.equals("Tri par client")){
+                    table.removeAllViewsInLayout();
+                    lesNotefrais = listNotefraisByClient(idUtilisateur);
+                    lesClients = listClients();
+                    for (Notefrais n : lesNotefrais) {
+                        final String idNotefrais = String.valueOf(n.getId_Notefrais());
+                        int validation[] = etatValidation(n.getId_Notefrais());
+                        int diff = validation[0]-validation[1];
+                        String leClient = "";
+                        for (Client c : lesClients) {
+                            if (c.getId_Client() == n.getId_Client()){
+                                leClient = c.getNom_Client()+" "+c.getPrenom_Client();
+                                break;
+                            }
+                        }
+                        TableRow tr = (TableRow) inflater.inflate(R.layout.tablerow_notefrais, null);
+                        if (diff == 0 ){
+                            ((ImageView) tr.findViewById(R.id.imageEtat)).setImageResource(R.drawable.if_circle_green_10280);
+                        } else if (validation[1] == 0){
+                            ((ImageView) tr.findViewById(R.id.imageEtat)).setImageResource(R.drawable.if_circle_red_10282);
+                        } else {
+                            ((ImageView) tr.findViewById(R.id.imageEtat)).setImageResource(R.drawable.if_circle_orange_10281_version2);
+                        }
+                        ((TextView) tr.findViewById(R.id.textIdNotefrais)).setText("N° : "+idNotefrais);
+                        ((TextView) tr.findViewById(R.id.textDateNotefrais)).setText("Date : "+n.getDate_Notefrais());
+                        ((TextView) tr.findViewById(R.id.textNomClient)).setText("Client : "+leClient);
+                        tr.findViewById(R.id.btnVoirDepense).setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Intent intentListDepense = new Intent(MenuActivity.this, ListDepenseActivity.class);
+                                intentListDepense.putExtra("id_notefrais", idNotefrais);
+                                startActivity(intentListDepense);
+                            }
+                        });
+                        table.addView(tr);
+                    }
+                } else if (tri.equals("Uniquement validées")){
+                    table.removeAllViewsInLayout();
+                    lesNotefrais = listNotefraisByDate(idUtilisateur);
+                    lesClients = listClients();
+                    for (Notefrais n : lesNotefrais) {
+                        final String idNotefrais = String.valueOf(n.getId_Notefrais());
+                        int validation[] = etatValidation(n.getId_Notefrais());
+                        int diff = validation[0]-validation[1];
+                        if (diff == 0){
+                            String leClient = "";
+                            for (Client c : lesClients) {
+                                if (c.getId_Client() == n.getId_Client()){
+                                    leClient = c.getNom_Client()+" "+c.getPrenom_Client();
+                                    break;
+                                }
+                            }
+                            TableRow tr = (TableRow) inflater.inflate(R.layout.tablerow_notefrais, null);
+                            if (diff == 0 ){
+                                ((ImageView) tr.findViewById(R.id.imageEtat)).setImageResource(R.drawable.if_circle_green_10280);
+                            } else if (validation[1] == 0){
+                                ((ImageView) tr.findViewById(R.id.imageEtat)).setImageResource(R.drawable.if_circle_red_10282);
+                            } else {
+                                ((ImageView) tr.findViewById(R.id.imageEtat)).setImageResource(R.drawable.if_circle_orange_10281_version2);
+                            }
+                            ((TextView) tr.findViewById(R.id.textIdNotefrais)).setText("N° : "+idNotefrais);
+                            ((TextView) tr.findViewById(R.id.textDateNotefrais)).setText("Date : "+n.getDate_Notefrais());
+                            ((TextView) tr.findViewById(R.id.textNomClient)).setText("Client : "+leClient);
+                            tr.findViewById(R.id.btnVoirDepense).setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    Intent intentListDepense = new Intent(MenuActivity.this, ListDepenseActivity.class);
+                                    intentListDepense.putExtra("id_notefrais", idNotefrais);
+                                    startActivity(intentListDepense);
+                                }
+                            });
+                            table.addView(tr);
+                        }
+                    }
+                } else if (tri.equals("Uniquement partiellement validées")){
+                    table.removeAllViewsInLayout();
+                    lesNotefrais = listNotefraisByDate(idUtilisateur);
+                    lesClients = listClients();
+                    for (Notefrais n : lesNotefrais) {
+                        final String idNotefrais = String.valueOf(n.getId_Notefrais());
+                        int validation[] = etatValidation(n.getId_Notefrais());
+                        int diff = validation[0] - validation[1];
+                        if (diff > 0 && validation[1] != 0) {
+                            String leClient = "";
+                            for (Client c : lesClients) {
+                                if (c.getId_Client() == n.getId_Client()) {
+                                    leClient = c.getNom_Client() + " " + c.getPrenom_Client();
+                                    break;
+                                }
+                            }
+                            TableRow tr = (TableRow) inflater.inflate(R.layout.tablerow_notefrais, null);
+                            if (diff == 0) {
+                                ((ImageView) tr.findViewById(R.id.imageEtat)).setImageResource(R.drawable.if_circle_green_10280);
+                            } else if (validation[1] == 0) {
+                                ((ImageView) tr.findViewById(R.id.imageEtat)).setImageResource(R.drawable.if_circle_red_10282);
+                            } else {
+                                ((ImageView) tr.findViewById(R.id.imageEtat)).setImageResource(R.drawable.if_circle_orange_10281_version2);
+                            }
+                            ((TextView) tr.findViewById(R.id.textIdNotefrais)).setText("N° : " + idNotefrais);
+                            ((TextView) tr.findViewById(R.id.textDateNotefrais)).setText("Date : " + n.getDate_Notefrais());
+                            ((TextView) tr.findViewById(R.id.textNomClient)).setText("Client : " + leClient);
+                            tr.findViewById(R.id.btnVoirDepense).setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    Intent intentListDepense = new Intent(MenuActivity.this, ListDepenseActivity.class);
+                                    intentListDepense.putExtra("id_notefrais", idNotefrais);
+                                    startActivity(intentListDepense);
+                                }
+                            });
+                            table.addView(tr);
+                        }
+                    }
+                } else if (tri.equals("Uniquement non validées")){
+                    table.removeAllViewsInLayout();
+                    lesNotefrais = listNotefraisByDate(idUtilisateur);
+                    lesClients = listClients();
+                    for (Notefrais n : lesNotefrais) {
+                        final String idNotefrais = String.valueOf(n.getId_Notefrais());
+                        int validation[] = etatValidation(n.getId_Notefrais());
+                        int diff = validation[0] - validation[1];
+                        if (validation[1] == 0) {
+                            String leClient = "";
+                            for (Client c : lesClients) {
+                                if (c.getId_Client() == n.getId_Client()) {
+                                    leClient = c.getNom_Client() + " " + c.getPrenom_Client();
+                                    break;
+                                }
+                            }
+                            TableRow tr = (TableRow) inflater.inflate(R.layout.tablerow_notefrais, null);
+                            if (diff == 0) {
+                                ((ImageView) tr.findViewById(R.id.imageEtat)).setImageResource(R.drawable.if_circle_green_10280);
+                            } else if (validation[1] == 0) {
+                                ((ImageView) tr.findViewById(R.id.imageEtat)).setImageResource(R.drawable.if_circle_red_10282);
+                            } else {
+                                ((ImageView) tr.findViewById(R.id.imageEtat)).setImageResource(R.drawable.if_circle_orange_10281_version2);
+                            }
+                            ((TextView) tr.findViewById(R.id.textIdNotefrais)).setText("N° : " + idNotefrais);
+                            ((TextView) tr.findViewById(R.id.textDateNotefrais)).setText("Date : " + n.getDate_Notefrais());
+                            ((TextView) tr.findViewById(R.id.textNomClient)).setText("Client : " + leClient);
+                            tr.findViewById(R.id.btnVoirDepense).setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    Intent intentListDepense = new Intent(MenuActivity.this, ListDepenseActivity.class);
+                                    intentListDepense.putExtra("id_notefrais", idNotefrais);
+                                    startActivity(intentListDepense);
+                                }
+                            });
+                            table.addView(tr);
+                        }
+                    }
                 }
             }
-            TableRow tr = (TableRow) inflater.inflate(R.layout.tablerow_notefrais, null);
-            ((TextView) tr.findViewById(R.id.textIdNotefrais)).setText("N° : "+idNotefrais);
-            ((TextView) tr.findViewById(R.id.textDateNotefrais)).setText("Date : "+n.getDate_Notefrais());
-            ((TextView) tr.findViewById(R.id.textNomClient)).setText("Client : "+leClient);
-            tr.findViewById(R.id.btnVoirDepense).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intentListDepense = new Intent(MenuActivity.this, ListDepenseActivity.class);
-                    intentListDepense.putExtra("id_notefrais", idNotefrais);
-                    startActivity(intentListDepense);
-                }
-            });
-            table.addView(tr);
-        }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
 
         btnAddFrais = (ImageButton) findViewById(R.id.btnAddFrais);
         btnAddFrais.setOnClickListener(new View.OnClickListener() {
@@ -125,14 +275,72 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
                 startActivity(intentAddFrais);
             }
         });
-
     }
 
-    public ArrayList<Notefrais> listNotefrais(int idUtilisateur){
+    public int[] etatValidation(int idNotefrais){
+        String result = "";
+        int nbreDepense[] = new int[2];
+
+        String myUrl = "http://moralesmarie.alwaysdata.net/public/notefrais/"+idNotefrais+"/validation";
+
+        HttpGetRequest getRequest = new HttpGetRequest();
+        try{
+            result = getRequest.execute(myUrl).get();
+        }
+        catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+        try {
+            JSONArray jsonArray = new JSONArray(result);
+            nbreDepense[0] = jsonArray.getJSONObject(0).getInt("TOTAL_DEPENSE");
+            nbreDepense[1] = jsonArray.getJSONObject(1).getInt("TOTAL_DEPENSE_VALIDER");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return nbreDepense;
+    }
+
+    public ArrayList<Notefrais> listNotefraisByDate(int idUtilisateur){
         ArrayList<Notefrais> lesNotefrais = new ArrayList<Notefrais>();
         String result = "";
 
-        String myUrl = "http://moralesmarie.alwaysdata.net/public/utilisateur/"+idUtilisateur+"/notefrais";
+        String myUrl = "http://moralesmarie.alwaysdata.net/public/utilisateur/"+idUtilisateur+"/notefrais/tri/date";
+
+        HttpGetRequest getRequest = new HttpGetRequest();
+        try{
+            result = getRequest.execute(myUrl).get(); // exécution de la connexion
+        }
+        catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+        try {
+            JSONArray tblJSON = new JSONArray(result);
+            for (int i = 0 ; i < tblJSON.length() ; i++) {
+                JSONObject jsonObject = tblJSON.getJSONObject(i);
+                Notefrais laNotefrais = new Notefrais(
+                        jsonObject.getInt("Id_Notefrais"),
+                        jsonObject.getString("Date_Notefrais"),
+                        jsonObject.getString("DateSoumission_Notefrais"),
+                        jsonObject.getInt("Id_Utilisateur"),
+                        jsonObject.getInt("Id_Client")
+                );
+                lesNotefrais.add(laNotefrais);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return lesNotefrais;
+    }
+
+    public ArrayList<Notefrais> listNotefraisByClient(int idUtilisateur){
+        ArrayList<Notefrais> lesNotefrais = new ArrayList<Notefrais>();
+        String result = "";
+
+        String myUrl = "http://moralesmarie.alwaysdata.net/public/utilisateur/"+idUtilisateur+"/notefrais/tri/client";
 
         HttpGetRequest getRequest = new HttpGetRequest();
         try{

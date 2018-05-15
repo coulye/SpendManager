@@ -9,38 +9,277 @@
     tools:showIn="@layout/app_bar_detail_depense">
 
     <LinearLayout
+        android:id="@+id/linearLayout3"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toTopOf="@+id/footer"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-        <TextView
-            android:id="@+id/textTitreDetailDepense"
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Détails Dépense"
-            android:textAlignment="center"
-            android:textSize="35sp"
-            android:textStyle="bold"
-            tools:layout_editor_absoluteX="109dp"
-            tools:layout_editor_absoluteY="73dp" />
+            android:layout_height="match_parent">
 
-        <TextView
-            android:id="@+id/test"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="TEST "
-            android:textAlignment="center"
-            android:textSize="40sp"
-            tools:layout_editor_absoluteX="141dp"
-            tools:layout_editor_absoluteY="66dp" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:orientation="vertical">
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="TEST"
-            android:textAlignment="center"
-            android:textSize="45sp" />
+                <TextView
+                    android:id="@+id/textTitreDetailDepense"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Détails Dépense"
+                    android:textAlignment="center"
+                    android:textSize="30sp"
+                    android:textStyle="bold"
+                    tools:layout_editor_absoluteX="109dp"
+                    tools:layout_editor_absoluteY="73dp" />
+
+                <ImageView
+                    android:id="@+id/imageViewType"
+                    android:layout_width="match_parent"
+                    android:layout_height="150dp"
+                    app:srcCompat="@drawable/ic_directions_bus_black_24dp" />
+
+                <TextView
+                    android:id="@+id/titreDatePaiement"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Date de remboursement : :"
+                    android:textSize="25sp" />
+
+                <TextView
+                    android:id="@+id/textDatePaiement"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="2018-05-05"
+                    android:textAlignment="center"
+                    android:textSize="18sp"
+                    tools:layout_editor_absoluteX="141dp"
+                    tools:layout_editor_absoluteY="66dp" />
+
+                <TextView
+                    android:id="@+id/titreLibelle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Libelle :"
+                    android:textSize="25sp" />
+
+                <TextView
+                    android:id="@+id/textLibelle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Bus"
+                    android:textAlignment="center"
+                    android:textSize="18sp"
+                    tools:layout_editor_absoluteX="141dp"
+                    tools:layout_editor_absoluteY="66dp" />
+
+                <TextView
+                    android:id="@+id/titreCommentaire"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Commentaire :"
+                    android:textSize="25sp" />
+
+                <TextView
+                    android:id="@+id/textCommentaire"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Blabla bla blablabla bla blabla bla blablablabla bla blabla bla bla bla blabla blablabla blabla."
+                    android:textAlignment="textStart"
+                    android:textSize="18sp"
+                    tools:layout_editor_absoluteX="141dp"
+                    tools:layout_editor_absoluteY="66dp" />
+
+                <TextView
+                    android:id="@+id/titreMontant"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Coût de la dépense :"
+                    android:textSize="25sp" />
+
+                <TextView
+                    android:id="@+id/textMontant"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="17.50 €"
+                    android:textAlignment="center"
+                    android:textSize="18sp"
+                    tools:layout_editor_absoluteX="141dp"
+                    tools:layout_editor_absoluteY="66dp" />
+
+                <TextView
+                    android:id="@+id/titreIdNotefrais"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Note de frais correspondante :"
+                    android:textSize="25sp" />
+
+                <TextView
+                    android:id="@+id/textIdNotefrais"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Note de frais N°22"
+                    android:textAlignment="center"
+                    android:textSize="18sp"
+                    tools:layout_editor_absoluteX="141dp"
+                    tools:layout_editor_absoluteY="66dp" />
+
+                <TextView
+                    android:id="@+id/titreDateFrais2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Date du frais :"
+                    android:textSize="25sp" />
+
+                <TextView
+                    android:id="@+id/textDatefrais2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="2018-05-05"
+                    android:textAlignment="center"
+                    android:textSize="18sp"
+                    tools:layout_editor_absoluteX="141dp"
+                    tools:layout_editor_absoluteY="66dp" />
+
+                <TextView
+                    android:id="@+id/titreDuree"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Durée du trajet :"
+                    android:textSize="25sp" />
+
+                <TextView
+                    android:id="@+id/textDuree"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="00:01:30"
+                    android:textAlignment="center"
+                    android:textSize="18sp"
+                    tools:layout_editor_absoluteX="141dp"
+                    tools:layout_editor_absoluteY="66dp" />
+
+                <TextView
+                    android:id="@+id/titreVilleDepard"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Ville de départ :"
+                    android:textSize="25sp" />
+
+                <TextView
+                    android:id="@+id/textVilleDepard"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Marseille"
+                    android:textAlignment="center"
+                    android:textSize="18sp"
+                    tools:layout_editor_absoluteX="141dp"
+                    tools:layout_editor_absoluteY="66dp" />
+
+                <TextView
+                    android:id="@+id/titreVilleArrivee"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Ville d'arrivée :"
+                    android:textSize="25sp" />
+
+                <TextView
+                    android:id="@+id/textVilleArrivee"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Paris"
+                    android:textAlignment="center"
+                    android:textSize="18sp"
+                    tools:layout_editor_absoluteX="141dp"
+                    tools:layout_editor_absoluteY="66dp" />
+
+                <TextView
+                    android:id="@+id/titreDateAller"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Date d'aller :"
+                    android:textSize="25sp" />
+
+                <TextView
+                    android:id="@+id/textDateAller"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="2018-05-06"
+                    android:textAlignment="center"
+                    android:textSize="18sp"
+                    tools:layout_editor_absoluteX="141dp"
+                    tools:layout_editor_absoluteY="66dp" />
+
+                <TextView
+                    android:id="@+id/titreDateRetour"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Date de retour :"
+                    android:textSize="25sp" />
+
+                <TextView
+                    android:id="@+id/textDateRetour"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="2018-05-09"
+                    android:textAlignment="center"
+                    android:textSize="18sp"
+                    tools:layout_editor_absoluteX="141dp"
+                    tools:layout_editor_absoluteY="66dp" />
+
+                <TextView
+                    android:id="@+id/titreKilometre"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Nombre de kilometres :"
+                    android:textSize="25sp" />
+
+                <TextView
+                    android:id="@+id/textKilometre"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="948 km"
+                    android:textAlignment="center"
+                    android:textSize="18sp"
+                    tools:layout_editor_absoluteX="141dp"
+                    tools:layout_editor_absoluteY="66dp" />
+
+                <TextView
+                    android:id="@+id/space"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="25sp" />
+
+            </LinearLayout>
+        </ScrollView>
 
     </LinearLayout>
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/footer"
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:background="#0d6ebd"
+        android:gravity="bottom"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout3"
+        tools:layout_editor_absoluteX="0dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            tools:layout_editor_absoluteX="16dp"
+            tools:layout_editor_absoluteY="73dp">
+
+        </LinearLayout>
+
+    </android.support.constraint.ConstraintLayout>
 
 </android.support.constraint.ConstraintLayout>
