@@ -39,7 +39,7 @@
                 android:textStyle="bold" />
 
             <RadioGroup
-                android:id="@+id/radioGroup"
+                android:id="@+id/radioGroupClient"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1">
@@ -151,7 +151,7 @@
             android:layout_marginTop="8dp"
             android:background="@drawable/button_states"
             android:text="Valider"
-            android:textColor="#5cb43a"
+            android:textColor="@drawable/button_text_color"
             android:textSize="18sp"
             android:textStyle="bold"
             android:visibility="visible"

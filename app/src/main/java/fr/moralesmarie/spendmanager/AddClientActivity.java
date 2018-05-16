@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -16,6 +17,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,6 +36,7 @@ public class AddClientActivity extends AppCompatActivity implements NavigationVi
     private EditText tel;
     private RadioButton madame;
     private RadioButton monsieur;
+    private RadioGroup radioGroupClient;
     private EditText nom;
     private EditText prenom;
 
@@ -76,6 +79,7 @@ public class AddClientActivity extends AppCompatActivity implements NavigationVi
             user_detail.setText(coorduser);
         }
 
+        radioGroupClient = (RadioGroup) findViewById(R.id.radioGroupClient);
         madame = (RadioButton) findViewById(R.id.radioMadame);
         monsieur = (RadioButton) findViewById(R.id.radioMonsieur);
         nom = (EditText) findViewById(R.id.textNom);
@@ -91,35 +95,49 @@ public class AddClientActivity extends AppCompatActivity implements NavigationVi
         btnValider.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (madame.isChecked()){
-                    titre = "Madame";
-                }
-                else if (monsieur.isChecked()){
-                    titre = "Monsieur";
-                }
-                Client leClient = new Client(
-                        0,
-                        titre,
-                        nom.getText().toString(),
-                        prenom.getText().toString(),
-                        adresse.getText().toString(),
-                        cp.getText().toString(),
-                        ville.getText().toString(),
-                        tel.getText().toString(),
-                        mail.getText().toString(),
-                        raisonSociale.getText().toString()
-                );
-                String result = addClient(leClient);
-                if (result.equals("true\r")){
+                if (radioGroupClient.getCheckedRadioButtonId() == -1){
                     Context c = getApplicationContext();
-                    Toast msg = Toast.makeText(c, "Le client a bien été ajouté !", Toast.LENGTH_SHORT);
+                    Toast msg = Toast.makeText(c, "Veuillez renseigner un genre !", Toast.LENGTH_SHORT);
                     msg.show();
-                    Intent i = new Intent(AddClientActivity.this, AddFraisActivity.class);
-                    startActivity(i);
                 } else {
-                    Context c = getApplicationContext();
-                    Toast msg = Toast.makeText(c, "ERREUR : Echec de l'ajout du client !", Toast.LENGTH_SHORT);
-                    msg.show();
+                    if (nom.getText().toString().equals("") || prenom.getText().toString().equals("") ||
+                            adresse.getText().toString().equals("") || cp.getText().toString().equals("") ||
+                            ville.getText().toString().equals("") || tel.getText().toString().equals("") ||
+                            mail.getText().toString().equals("")){
+                        Context c = getApplicationContext();
+                        Toast msg = Toast.makeText(c, "Veuillez renseigner les champs demandés, seule la Raison Sociale n'est pas requise !", Toast.LENGTH_SHORT);
+                        msg.show();
+                    } else {
+                        if (madame.isChecked()) {
+                            titre = "Madame";
+                        } else if (monsieur.isChecked()) {
+                            titre = "Monsieur";
+                        }
+                        Client leClient = new Client(
+                                0,
+                                titre,
+                                nom.getText().toString(),
+                                prenom.getText().toString(),
+                                adresse.getText().toString(),
+                                cp.getText().toString(),
+                                ville.getText().toString(),
+                                tel.getText().toString(),
+                                mail.getText().toString(),
+                                raisonSociale.getText().toString()
+                        );
+                        String result = addClient(leClient);
+                        if (result.equals("true\r")) {
+                            Context c = getApplicationContext();
+                            Toast msg = Toast.makeText(c, "Le client a bien été ajouté !", Toast.LENGTH_SHORT);
+                            msg.show();
+                            Intent i = new Intent(AddClientActivity.this, AddFraisActivity.class);
+                            startActivity(i);
+                        } else {
+                            Context c = getApplicationContext();
+                            Toast msg = Toast.makeText(c, "ERREUR : Echec de l'ajout du client !", Toast.LENGTH_SHORT);
+                            msg.show();
+                        }
+                    }
                 }
             }
         });
@@ -210,6 +228,8 @@ public class AddClientActivity extends AppCompatActivity implements NavigationVi
             startActivity(graphIntent);
 
         } else if (id == R.id.user_account) {
+            Intent accountIntent = new Intent(AddClientActivity.this, AccountActivity.class);
+            startActivity(accountIntent);
 
         } else if (id == R.id.user_deco) {
             Intent DecoIntent = new Intent(AddClientActivity.this, LoginActivity.class);

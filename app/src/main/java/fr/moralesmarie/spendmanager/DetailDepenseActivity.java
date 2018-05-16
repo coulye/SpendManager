@@ -3,6 +3,8 @@ package fr.moralesmarie.spendmanager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -10,6 +12,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Base64;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -24,6 +27,7 @@ import org.w3c.dom.Text;
 import java.util.concurrent.ExecutionException;
 
 import fr.moralesmarie.spendmanager.Class.Frais;
+import fr.moralesmarie.spendmanager.Class.Justificatif;
 import fr.moralesmarie.spendmanager.Class.Trajet;
 import fr.moralesmarie.spendmanager.HttpRequest.HttpGetRequest;
 
@@ -43,6 +47,7 @@ public class DetailDepenseActivity extends AppCompatActivity implements Navigati
     private TextView textCommentaire;
     private TextView textMontant;
     private TextView textIdNotefrais;
+    private ImageView imageJustificatif;
     private TextView titreDateFrais;
     private TextView textDateFrais;
     private TextView titreDuree;
@@ -100,6 +105,7 @@ public class DetailDepenseActivity extends AppCompatActivity implements Navigati
         textCommentaire = (TextView) findViewById(R.id.textCommentaire);
         textMontant = (TextView) findViewById(R.id.textMontant);
         textIdNotefrais = (TextView) findViewById(R.id.textIdNotefrais);
+        imageJustificatif = (ImageView) findViewById(R.id.imageJustificatif);
         titreDateFrais = (TextView) findViewById(R.id.titreDateFrais2);
         textDateFrais = (TextView) findViewById(R.id.textDatefrais2);
         titreDuree = (TextView) findViewById(R.id.titreDuree);
@@ -158,6 +164,13 @@ public class DetailDepenseActivity extends AppCompatActivity implements Navigati
         textMontant.setText(montant + " €");
         textIdNotefrais.setText("Note de frais N° " + idNotefrais);
 
+        String encodedImageData = catchJustificatif(idDepense, idNotefrais);
+        if (!encodedImageData.equals("null")) {
+            byte[] imageBytes = Base64.decode(encodedImageData, Base64.DEFAULT);
+            Bitmap decodedImage = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);
+            imageJustificatif.setImageBitmap(decodedImage);
+        }
+
         if (libelle.equals("Essence") || libelle.equals("Hotel") || libelle.equals("Parking") || libelle.equals("Restaurant")) {
             titreDepense.setText("Détails du Frais N° " + idDepense);
             Frais leFrais = catchFrais(idDepense);
@@ -190,6 +203,42 @@ public class DetailDepenseActivity extends AppCompatActivity implements Navigati
             textDateRetour.setText(leTrajet.getDateRetour_Trajet());
             textKilometre.setText(String.valueOf(leTrajet.getKilometre_Trajet()));
         }
+    }
+
+    public String catchJustificatif (int idDepense, int idNotefrais){
+        Justificatif leJustificatif = null;
+        String encodedImageDate = "";
+
+        String result = "";
+        String myUrl = "http://moralesmarie.alwaysdata.net/public/notefrais/"+idNotefrais+"/depense/"+idDepense+"/justificatif";
+
+        HttpGetRequest getRequest = new HttpGetRequest();
+        try{
+            result = getRequest.execute(myUrl).get();
+        }
+        catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+        try {
+            JSONObject jsonObject = new JSONObject(result);
+            if (String.valueOf(jsonObject.getInt("Id_Utilisateur")).equals("null")){
+                encodedImageDate =  "null";
+            } else {
+                leJustificatif = new Justificatif(
+                        jsonObject.getInt("Id_Justificatif"),
+                        jsonObject.getString("Titre_Justificatif"),
+                        jsonObject.getString("Url_Justificatif"),
+                        idDepense,
+                        idNotefrais
+                );
+                encodedImageDate = leJustificatif.getUrl_Justificatif();
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return encodedImageDate;
     }
 
     public Frais catchFrais(int idDepense){
@@ -317,6 +366,8 @@ public class DetailDepenseActivity extends AppCompatActivity implements Navigati
             startActivity(graphIntent);
 
         } else if (id == R.id.user_account) {
+            Intent accountIntent = new Intent(DetailDepenseActivity.this, AccountActivity.class);
+            startActivity(accountIntent);
 
         } else if (id == R.id.user_deco) {
             Intent DecoIntent = new Intent(DetailDepenseActivity.this, LoginActivity.class);

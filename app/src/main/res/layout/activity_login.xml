@@ -106,8 +106,7 @@
         android:background="@drawable/button_states"
         android:onClick="OnLogin"
         android:text="Valider"
-        android:textColor="#5cb43a"
-
+        android:textColor="@drawable/button_text_color"
         android:textSize="15dp"
         android:textStyle="bold"
         android:visibility="visible" />

@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -19,6 +20,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Base64;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -39,14 +41,18 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Random;
 import java.util.concurrent.ExecutionException;
 
 import fr.moralesmarie.spendmanager.Class.Client;
 import fr.moralesmarie.spendmanager.Class.Frais;
+import fr.moralesmarie.spendmanager.Class.Justificatif;
 import fr.moralesmarie.spendmanager.Class.Notefrais;
 import fr.moralesmarie.spendmanager.Class.Trajet;
 import fr.moralesmarie.spendmanager.HttpRequest.HttpGetRequest;
@@ -85,6 +91,7 @@ public class AddFraisActivity extends AppCompatActivity implements NavigationVie
 
     private ArrayList<Frais> listFrais;
     private ArrayList<Trajet> listTrajet;
+    private ArrayList<Justificatif> listJustificatif;
 
     //PHOTO
     private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 0;
@@ -101,6 +108,7 @@ public class AddFraisActivity extends AppCompatActivity implements NavigationVie
     private Uri imageUri;
 
 	final String LOGIN_USER = "user_profile";
+	private int idUtilisateur;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -133,6 +141,8 @@ public class AddFraisActivity extends AppCompatActivity implements NavigationVie
             coorduser = myPref.getString("prenom_extra", coorduser)+ " " + myPref.getString("nom_extra", coorduser);
             user_detail = (TextView)headerLayout.findViewById(R.id.user_detail);
             user_detail.setText(coorduser);
+
+            idUtilisateur = myPref.getInt("id_user", idUtilisateur);
         }
 
         btnAddClient = (Button) findViewById(R.id.btnAddClient);
@@ -253,7 +263,6 @@ public class AddFraisActivity extends AppCompatActivity implements NavigationVie
         });
 
         radioGroup = (RadioGroup) findViewById(R.id.radioGroupMotif);
-//        radioGroup.setOnCheckedChangeListener();
 
         commentaire = (EditText) findViewById(R.id.commentaireFrais);
         dureeTrajet = (EditText) findViewById(R.id.dureeTrajet);
@@ -268,14 +277,11 @@ public class AddFraisActivity extends AppCompatActivity implements NavigationVie
 
         listFrais = new ArrayList<Frais>();
         listTrajet = new ArrayList<Trajet>();
+        listJustificatif = new ArrayList<Justificatif>();
 
         takePictureBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-//                if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-//                    startActivityForResult(takePictureIntent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
-//                }
                 int permission = ActivityCompat.checkSelfPermission(getApplicationContext(),
                         Manifest.permission.WRITE_EXTERNAL_STORAGE);
                 if (permission != PackageManager.PERMISSION_GRANTED) {
@@ -307,11 +313,13 @@ public class AddFraisActivity extends AppCompatActivity implements NavigationVie
                     Toast msg = Toast.makeText(c, "Veuillez renseigner tous les champs demandés !", Toast.LENGTH_SHORT);
                     msg.show();
                 } else {
+                    int idDepense = 0;
                     if (radioSelect.getText().toString().equals("Essence") || radioSelect.getText().toString().equals("Hotel") ||
                             radioSelect.getText().toString().equals("Parking") || radioSelect.getText().toString().equals("Restaurant")) {
+                        idDepense = getRandom();
                         Frais leFrais = new Frais(
                                 SQLDateExpense,
-                                0,
+                                idDepense,
                                 null,
                                 radioSelect.getText().toString(),
                                 commentaire.getText().toString(),
@@ -319,34 +327,43 @@ public class AddFraisActivity extends AppCompatActivity implements NavigationVie
                                 0
                         );
                         listFrais.add(leFrais);
-                    } else {
+                    } else if (radioSelect.getText().toString().equals("Train") || radioSelect.getText().toString().equals("Taxi") ||
+                            radioSelect.getText().toString().equals("Bus") || radioSelect.getText().toString().equals("Autoroute") ||
+                            radioSelect.getText().toString().equals("Avion")) {
                         if (dureeTrajet.getText().toString().equals("") || villeDepard.getText().toString().equals("") ||
                                 villeArrivee.getText().toString().equals("") || km.getText().toString().equals("")){
                             Context c = getApplicationContext();
                             Toast msg = Toast.makeText(c, "Veuillez renseigner tous les champs demandés !", Toast.LENGTH_SHORT);
                             msg.show();
                         } else {
-                            if (radioSelect.getText().toString().equals("Train") || radioSelect.getText().toString().equals("Taxi") ||
-                                    radioSelect.getText().toString().equals("Bus") || radioSelect.getText().toString().equals("Autoroute") ||
-                                    radioSelect.getText().toString().equals("Avion")) {
-                                Trajet leTrajet = new Trajet(
-                                        dureeTrajet.getText().toString(),
-                                        villeDepard.getText().toString(),
-                                        villeArrivee.getText().toString(),
-                                        SQLDateAller,
-                                        SQLDateRetour,
-                                        Float.parseFloat(km.getText().toString()),
-                                        0,
-                                        null,
-                                        radioSelect.getText().toString(),
-                                        commentaire.getText().toString(),
-                                        Float.parseFloat(montant.getText().toString()),
-                                        0
-                                );
-                                listTrajet.add(leTrajet);
-                            }
+                            idDepense = getRandom();
+                            Trajet leTrajet = new Trajet(
+                                    dureeTrajet.getText().toString(),
+                                    villeDepard.getText().toString(),
+                                    villeArrivee.getText().toString(),
+                                    SQLDateAller,
+                                    SQLDateRetour,
+                                    Float.parseFloat(km.getText().toString()),
+                                    idDepense,
+                                    null,
+                                    radioSelect.getText().toString(),
+                                    commentaire.getText().toString(),
+                                    Float.parseFloat(montant.getText().toString()),
+                                    0
+                            );
+                            listTrajet.add(leTrajet);
                         }
                     }
+                    Bitmap bitmap = ((BitmapDrawable)mImageThumbnail.getDrawable()).getBitmap();
+                    String encodedImageData = getEncoded64ImageStringFromBitmap(bitmap);
+                    Justificatif leJustificatif = new Justificatif(
+                            0,
+                            radioSelect.getText().toString()+mDate,
+                            encodedImageData,
+                            idDepense,
+                            0
+                    );
+                    listJustificatif.add(leJustificatif);
                 }
 
                 //remise à zéro
@@ -369,51 +386,67 @@ public class AddFraisActivity extends AppCompatActivity implements NavigationVie
             @Override
             public void onClick(View v) {
                 RadioButton radioSelect = (RadioButton) findViewById(radioGroup.getCheckedRadioButtonId());
-                if (!montant.getText().toString().equals("") && !commentaire.getText().toString().equals("")) {
-                    //ajout en mémoire de la dépense en cours
-                    if (radioSelect.getText().toString().equals("Essence") || radioSelect.getText().toString().equals("Hotel") ||
-                            radioSelect.getText().toString().equals("Parking") || radioSelect.getText().toString().equals("Restaurant")) {
-                        Frais leFrais = new Frais(
-                                SQLDateExpense,
-                                0,
-                                null,
-                                radioSelect.getText().toString(),
-                                commentaire.getText().toString(),
-                                Float.parseFloat(montant.getText().toString()),
-                                0
-                        );
-                        listFrais.add(leFrais);
-                    } else if (radioSelect.getText().toString().equals("Train") || radioSelect.getText().toString().equals("Taxi") ||
-                            radioSelect.getText().toString().equals("Bus") || radioSelect.getText().toString().equals("Autoroute") ||
-                            radioSelect.getText().toString().equals("Avion")) {
-                        Trajet leTrajet = new Trajet(
-                                dureeTrajet.getText().toString(),
-                                villeDepard.getText().toString(),
-                                villeArrivee.getText().toString(),
-                                SQLDateAller,
-                                SQLDateRetour,
-                                Float.parseFloat(km.getText().toString()),
-                                0,
-                                null,
-                                radioSelect.getText().toString(),
-                                commentaire.getText().toString(),
-                                Float.parseFloat(montant.getText().toString()),
-                                0
-                        );
-                        listTrajet.add(leTrajet);
-                    }
-                }
-
-                //création note de frais
-                if (listTrajet.isEmpty() && listFrais.isEmpty()) {
+                String leClient = spinner.getSelectedItem().toString();
+                if (leClient.equals("Choisissez un client")) {
                     Context c = getApplicationContext();
-                    Toast msg = Toast.makeText(c, "Vous n'avez enregistré aucune dépense !", Toast.LENGTH_SHORT);
+                    Toast msg = Toast.makeText(c, "Veuillez choisir un client dans la liste déroulante !", Toast.LENGTH_SHORT);
                     msg.show();
                 } else {
-                    String leClient = spinner.getSelectedItem().toString();
-                    if (leClient.equals("Choisissez un client")) {
+                    if (montant.getText().toString().equals("") && commentaire.getText().toString().equals("")) {
                         Context c = getApplicationContext();
-                        Toast msg = Toast.makeText(c, "Veuillez choisir un client !", Toast.LENGTH_SHORT);
+                        Toast msg = Toast.makeText(c, "Tous les champs de la dépense à l'écran n'ont pas été remplis. Elle ne sera pas prise en compte !", Toast.LENGTH_LONG);
+                        msg.show();
+                    } else {
+                        //ajout en mémoire de la dépense en cours
+                        int idDepense = 0;
+                        if (radioSelect.getText().toString().equals("Essence") || radioSelect.getText().toString().equals("Hotel") ||
+                                radioSelect.getText().toString().equals("Parking") || radioSelect.getText().toString().equals("Restaurant")) {
+                            idDepense = getRandom();
+                            Frais leFrais = new Frais(
+                                    SQLDateExpense,
+                                    idDepense,
+                                    null,
+                                    radioSelect.getText().toString(),
+                                    commentaire.getText().toString(),
+                                    Float.parseFloat(montant.getText().toString()),
+                                    0
+                            );
+                            listFrais.add(leFrais);
+                        } else if (radioSelect.getText().toString().equals("Train") || radioSelect.getText().toString().equals("Taxi") ||
+                                radioSelect.getText().toString().equals("Bus") || radioSelect.getText().toString().equals("Autoroute") ||
+                                radioSelect.getText().toString().equals("Avion")) {
+                            idDepense = getRandom();
+                            Trajet leTrajet = new Trajet(
+                                    dureeTrajet.getText().toString(),
+                                    villeDepard.getText().toString(),
+                                    villeArrivee.getText().toString(),
+                                    SQLDateAller,
+                                    SQLDateRetour,
+                                    Float.parseFloat(km.getText().toString()),
+                                    idDepense,
+                                    null,
+                                    radioSelect.getText().toString(),
+                                    commentaire.getText().toString(),
+                                    Float.parseFloat(montant.getText().toString()),
+                                    0
+                            );
+                            listTrajet.add(leTrajet);
+                        }
+                        Bitmap bitmap = ((BitmapDrawable)mImageThumbnail.getDrawable()).getBitmap();
+                        String encodedImageData = getEncoded64ImageStringFromBitmap(bitmap);
+                        Justificatif leJustificatif = new Justificatif(
+                                0,
+                                radioSelect.getText().toString()+mDate,
+                                encodedImageData,
+                                idDepense,
+                                0
+                        );
+                        listJustificatif.add(leJustificatif);
+                    }
+                    //création note de frais
+                    if (listTrajet.isEmpty() && listFrais.isEmpty()) {
+                        Context c = getApplicationContext();
+                        Toast msg = Toast.makeText(c, "Il n'y a aucune dépense en attente impossible de créer la note de frais !", Toast.LENGTH_LONG);
                         msg.show();
                     } else {
                         int idClient = 0;
@@ -424,8 +457,8 @@ public class AddFraisActivity extends AppCompatActivity implements NavigationVie
                             }
                         }
                         Notefrais laNotefrais = new Notefrais(0, mDate, mDate, 1, idClient);
-                        int idNotefrais = addNotefrais(laNotefrais);
-                        String result = addDepense(listTrajet, listFrais, idNotefrais);
+                        int idNotefrais = addNotefrais(laNotefrais, idUtilisateur);
+                        String result = addDepense(listTrajet, listFrais, listJustificatif, idNotefrais);
                         Context c = getApplicationContext();
                         Toast msg = Toast.makeText(c, "La note de frais à bien été ajoutée !", Toast.LENGTH_SHORT);
                         msg.show();
@@ -449,6 +482,21 @@ public class AddFraisActivity extends AppCompatActivity implements NavigationVie
                 }
             }
         });
+    }
+
+    public String getEncoded64ImageStringFromBitmap(Bitmap bitmap) {
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 70, stream);
+        byte[] byteFormat = stream.toByteArray();
+        String imgString = Base64.encodeToString(byteFormat, Base64.NO_WRAP);
+
+        return imgString;
+    }
+
+    public int getRandom(){
+        Random random = new Random();
+        int leRandom = 100000 + random.nextInt(1000000 - 100000);
+        return leRandom;
     }
 
     public ArrayList<Client> listClient(){
@@ -491,13 +539,11 @@ public class AddFraisActivity extends AppCompatActivity implements NavigationVie
         return listClient;
     }
 
-    public int addNotefrais(Notefrais laNotefrais){
+    public int addNotefrais(Notefrais laNotefrais, int idUtilisateur){
         String result = "";
         int idNotefrais;
 
-//        String myUrl = "http://172.20.10.5/REST-API-SY4/public/login.php";
-//        String myUrl = "http://127.0.0.1:8080/REST-API-SY4/public/client";
-        String myUrl = "http://moralesmarie.alwaysdata.net/public/utilisateur/1/notefrais";
+        String myUrl = "http://moralesmarie.alwaysdata.net/public/utilisateur/"+idUtilisateur+"/notefrais";
         String params =
                 "Date_Notefrais="+laNotefrais.getDate_Notefrais()+
                 "&DateSoumission_Notefrais="+laNotefrais.getDateSoumission_Notefrais()+
@@ -517,12 +563,10 @@ public class AddFraisActivity extends AppCompatActivity implements NavigationVie
         return idNotefrais = Integer.parseInt(stringId[1]);
     }
 
-    public String addDepense(ArrayList<Trajet> listTrajet, ArrayList<Frais> listFrais, int idNotefrais){
+    public String addDepense(ArrayList<Trajet> listTrajet, ArrayList<Frais> listFrais, ArrayList<Justificatif> listJustificatif, int idNotefrais){
         String result = "";
 
         for (Frais frais : listFrais) {
-    //        String myUrl = "http://172.20.10.5/REST-API-SY4/public/login.php";
-    //        String myUrl = "http://127.0.0.1:8080/REST-API-SY4/public/client";
             String myUrl = "http://moralesmarie.alwaysdata.net/public/notefrais/"+idNotefrais+"/depense";
             String params =
                     "DatePaiement_Depense=0000-01-01" +
@@ -542,10 +586,18 @@ public class AddFraisActivity extends AppCompatActivity implements NavigationVie
             } catch (ExecutionException e) {
                 e.printStackTrace();
             }
+
+            String[] stringId = result.split("[^ 0-9]");
+            int idDepense = Integer.parseInt(stringId[1]);
+            Justificatif justificatif = null;
+            for (Justificatif j : listJustificatif){
+                if (frais.getId_Depense()==j.getId_Depense()){
+                    justificatif = j;
+                }
+            }
+            String resultJustificatif = addJustificatif(justificatif, idNotefrais, idDepense);
         }
         for (Trajet trajet : listTrajet) {
-            //        String myUrl = "http://172.20.10.5/REST-API-SY4/public/login.php";
-            //        String myUrl = "http://127.0.0.1:8080/REST-API-SY4/public/client";
             String myUrl = "http://moralesmarie.alwaysdata.net/public/notefrais/"+idNotefrais+"/depense";
             String params =
                     "DatePaiement_Depense=0000-01-01" +
@@ -570,6 +622,36 @@ public class AddFraisActivity extends AppCompatActivity implements NavigationVie
             } catch (ExecutionException e) {
                 e.printStackTrace();
             }
+
+            String[] stringId = result.split("[^ 0-9]");
+            int idDepense = Integer.parseInt(stringId[1]);
+            Justificatif justificatif = null;
+            for (Justificatif j : listJustificatif){
+                if (trajet.getId_Depense()==j.getId_Depense()){
+                    justificatif = j;
+                }
+            }
+            String resultJustificatif = addJustificatif(justificatif, idNotefrais, idDepense);
+        }
+        return result;
+    }
+
+    public String addJustificatif(Justificatif leJustificatif, int idNotefrais, int idDepense){
+        String result = "";
+        String myUrl = "http://moralesmarie.alwaysdata.net/public/notefrais/"+idNotefrais+"/depense/"+idDepense+"/justificatif";
+        String params =
+                "Titre_Justificatif="+ leJustificatif.getTitre_Justificatif() +
+                        "&Url_Justificatif=" + leJustificatif.getUrl_Justificatif() +
+                        "&Id_Depense=" + idDepense +
+                        "&Id_Notefrais=" + idNotefrais;
+        HttpPostRequest postRequest = new HttpPostRequest();
+        try{
+            result = postRequest.execute(new String []{myUrl, params}).get();
+        }
+        catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
         }
         return result;
     }
@@ -657,6 +739,8 @@ public class AddFraisActivity extends AppCompatActivity implements NavigationVie
             startActivity(graphIntent);
 
         } else if (id == R.id.user_account) {
+            Intent accountIntent = new Intent(AddFraisActivity.this, AccountActivity.class);
+            startActivity(accountIntent);
 
         } else if (id == R.id.user_deco) {
             Intent DecoIntent = new Intent(AddFraisActivity.this, LoginActivity.class);

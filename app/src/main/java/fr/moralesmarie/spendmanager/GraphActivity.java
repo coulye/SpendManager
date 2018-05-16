@@ -60,7 +60,7 @@ public class GraphActivity extends AppCompatActivity implements NavigationView.O
 
     private WebView webViewGraphType;
     private WebView webViewGraphMontant;
-    private int idUtilisateur = 1;
+    private int idUtilisateur;
     private ArrayList<Depense> listDepenses;
 	
 	final String LOGIN_USER = "user_profile";
@@ -96,6 +96,8 @@ public class GraphActivity extends AppCompatActivity implements NavigationView.O
             coorduser = myPref.getString("prenom_extra", coorduser)+ " " + myPref.getString("nom_extra", coorduser);
             user_detail = (TextView)headerLayout.findViewById(R.id.user_detail);
             user_detail.setText(coorduser);
+
+            idUtilisateur = myPref.getInt("id_user", idUtilisateur);
         }
 
         listDepenses = listDepensesUtilisateur(idUtilisateur);
@@ -268,6 +270,8 @@ public class GraphActivity extends AppCompatActivity implements NavigationView.O
             startActivity(graphIntent);
 
         } else if (id == R.id.user_account) {
+            Intent accountIntent = new Intent(GraphActivity.this, AccountActivity.class);
+            startActivity(accountIntent);
 
         } else if (id == R.id.user_deco) {
             Intent DecoIntent = new Intent(GraphActivity.this, LoginActivity.class);

@@ -81,6 +81,13 @@ public class LoginActivity extends AppCompatActivity {
                 editor.putString("loginSend", loginSend);
                 editor.putString("prenom_extra", objLogin.getString("Prenom_Utilisateur"));
                 editor.putString("nom_extra", objLogin.getString("Nom_Utilisateur"));
+                editor.putString("adresse_extra", (objLogin.getString("Adresse_Utilisateur")+", "+objLogin.getString("Cp_Utilisateur")+" "+objLogin.getString("Ville_Utilisateur")));
+                editor.putString("tel_extra", objLogin.getString("Telephone_Utilisateur"));
+                editor.putString("mail_extra", objLogin.getString("Mail_Utilisateur"));
+                editor.putString("mdp_extra", objLogin.getString("Mdp_Utilisateur"));
+                editor.putString("statut_extra", objLogin.getString("Statut_Utilisateur"));
+
+
                 editor.apply();
                 startActivity(i);
 
