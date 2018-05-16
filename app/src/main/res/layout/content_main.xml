@@ -74,7 +74,7 @@
                 android:layout_width="195dp"
                 android:layout_height="52dp"
                 android:layout_weight="1"
-                android:background="@android:color/transparent"
+                android:background="@drawable/plus_button_background"
                 android:scaleType="fitCenter"
                 app:srcCompat="@drawable/ic_add_box_white_24dp" />
 

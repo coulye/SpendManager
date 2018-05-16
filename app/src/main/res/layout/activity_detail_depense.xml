@@ -50,6 +50,7 @@
                     android:id="@+id/titreDatePaiement"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
                     android:text="Date de remboursement : :"
                     android:textSize="25sp" />
 
@@ -67,6 +68,7 @@
                     android:id="@+id/titreLibelle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
                     android:text="Libelle :"
                     android:textSize="25sp" />
 
@@ -84,6 +86,7 @@
                     android:id="@+id/titreCommentaire"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
                     android:text="Commentaire :"
                     android:textSize="25sp" />
 
@@ -101,6 +104,7 @@
                     android:id="@+id/titreMontant"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
                     android:text="Coût de la dépense :"
                     android:textSize="25sp" />
 
@@ -118,6 +122,7 @@
                     android:id="@+id/titreIdNotefrais"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
                     android:text="Note de frais correspondante :"
                     android:textSize="25sp" />
 
@@ -132,9 +137,24 @@
                     tools:layout_editor_absoluteY="66dp" />
 
                 <TextView
+                    android:id="@+id/titreJustificatif"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:text="Photo du justificatif :"
+                    android:textSize="25sp" />
+
+                <ImageView
+                    android:id="@+id/imageJustificatif"
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    app:srcCompat="@android:drawable/ic_menu_report_image" />
+
+                <TextView
                     android:id="@+id/titreDateFrais2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
                     android:text="Date du frais :"
                     android:textSize="25sp" />
 
@@ -152,6 +172,7 @@
                     android:id="@+id/titreDuree"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
                     android:text="Durée du trajet :"
                     android:textSize="25sp" />
 
@@ -169,6 +190,7 @@
                     android:id="@+id/titreVilleDepard"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
                     android:text="Ville de départ :"
                     android:textSize="25sp" />
 
@@ -186,6 +208,7 @@
                     android:id="@+id/titreVilleArrivee"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
                     android:text="Ville d'arrivée :"
                     android:textSize="25sp" />
 
@@ -203,6 +226,7 @@
                     android:id="@+id/titreDateAller"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
                     android:text="Date d'aller :"
                     android:textSize="25sp" />
 
@@ -220,6 +244,7 @@
                     android:id="@+id/titreDateRetour"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
                     android:text="Date de retour :"
                     android:textSize="25sp" />
 
@@ -237,6 +262,7 @@
                     android:id="@+id/titreKilometre"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
                     android:text="Nombre de kilometres :"
                     android:textSize="25sp" />
 

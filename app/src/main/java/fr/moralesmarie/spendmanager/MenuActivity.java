@@ -44,7 +44,7 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
     private TableLayout table;
     private ArrayList<Notefrais> lesNotefrais;
     private ArrayList<Client> lesClients;
-    private int idUtilisateur = 1;
+    private int idUtilisateur;
     private ImageButton btnAddFrais;
 	
 	final String LOGIN_USER = "user_profile";
@@ -81,6 +81,8 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
             //recuperation du texteview mail user
             user_detail = (TextView)headerLayout.findViewById(R.id.user_detail);
             user_detail.setText(coorduser);
+
+            idUtilisateur = myPref.getInt("id_user",idUtilisateur);
         }
 
         spinner = (Spinner)findViewById(R.id.spinner_liste_note);
@@ -489,6 +491,8 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
             startActivity(graphIntent);
 
         } else if (id == R.id.user_account) {
+            Intent accountIntent = new Intent(MenuActivity.this, AccountActivity.class);
+            startActivity(accountIntent);
 
         } else if (id == R.id.user_deco) {
             Intent DecoIntent = new Intent(MenuActivity.this, LoginActivity.class);

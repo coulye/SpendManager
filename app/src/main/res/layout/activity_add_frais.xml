@@ -115,6 +115,7 @@
                     android:layout_marginTop="10dp"
                     android:paddingLeft="10dp"
                     android:text="Essence"
+                    android:textColor="@drawable/checkbox_text_color"
                     android:textSize="20dp"/>
 
                 <RadioButton
@@ -127,6 +128,7 @@
                     android:layout_marginTop="10dp"
                     android:paddingLeft="10dp"
                     android:text="Train"
+                    android:textColor="@drawable/checkbox_text_color"
                     android:textSize="20dp"/>
 
                 <RadioButton
@@ -139,6 +141,7 @@
                     android:layout_marginTop="10dp"
                     android:paddingLeft="10dp"
                     android:text="Hotel"
+                    android:textColor="@drawable/checkbox_text_color"
                     android:textSize="20dp"/>
 
                 <RadioButton
@@ -151,6 +154,7 @@
                     android:layout_marginTop="10dp"
                     android:paddingLeft="10dp"
                     android:text="Taxi"
+                    android:textColor="@drawable/checkbox_text_color"
                     android:textSize="20dp"/>
 
                 <RadioButton
@@ -163,6 +167,7 @@
                     android:layout_marginTop="10dp"
                     android:paddingLeft="10dp"
                     android:text="Parking"
+                    android:textColor="@drawable/checkbox_text_color"
                     android:textSize="20dp"/>
 
                 <RadioButton
@@ -175,6 +180,7 @@
                     android:layout_marginTop="10dp"
                     android:paddingLeft="10dp"
                     android:text="Bus"
+                    android:textColor="@drawable/checkbox_text_color"
                     android:textSize="20dp"/>
 
                 <RadioButton
@@ -187,6 +193,7 @@
                     android:layout_marginTop="10dp"
                     android:paddingLeft="10dp"
                     android:text="Autoroute"
+                    android:textColor="@drawable/checkbox_text_color"
                     android:textSize="20dp"/>
 
                 <RadioButton
@@ -199,6 +206,7 @@
                     android:layout_marginTop="10dp"
                     android:paddingLeft="10dp"
                     android:text="Restaurant"
+                    android:textColor="@drawable/checkbox_text_color"
                     android:textSize="20dp"/>
 
                 <RadioButton
@@ -212,6 +220,7 @@
                     android:layout_marginBottom="10dp"
                     android:paddingLeft="10dp"
                     android:text="Avion"
+                    android:textColor="@drawable/checkbox_text_color"
                     android:textSize="20dp"/>
             </RadioGroup>
 
@@ -436,7 +445,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:background="@android:color/transparent"
+                android:background="@drawable/plus_button_background"
                 android:scaleType="fitCenter"
                 app:srcCompat="@drawable/ic_add_box_white_24dp" />
 
@@ -450,7 +459,7 @@
                 android:layout_weight="1"
                 android:background="@drawable/button_states"
                 android:text="Soumettre"
-                android:textColor="#5cb43a"
+                android:textColor="@drawable/button_text_color"
                 android:textSize="18sp"
                 android:textStyle="bold"
                 android:visibility="visible"

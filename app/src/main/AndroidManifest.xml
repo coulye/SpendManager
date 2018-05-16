@@ -45,6 +45,9 @@
         <activity
             android:name=".DetailDepenseActivity"
             android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".AccountActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
     </application>
 
 </manifest>

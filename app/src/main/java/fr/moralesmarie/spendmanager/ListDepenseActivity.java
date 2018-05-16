@@ -265,6 +265,8 @@ public class ListDepenseActivity extends AppCompatActivity implements Navigation
             startActivity(graphIntent);
 
         } else if (id == R.id.user_account) {
+            Intent accountIntent = new Intent(ListDepenseActivity.this, AccountActivity.class);
+            startActivity(accountIntent);
 
         } else if (id == R.id.user_deco) {
             Intent DecoIntent = new Intent(ListDepenseActivity.this, LoginActivity.class);
