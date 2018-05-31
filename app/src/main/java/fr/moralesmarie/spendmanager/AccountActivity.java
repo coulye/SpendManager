@@ -13,6 +13,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 
@@ -33,6 +34,9 @@ public class AccountActivity extends AppCompatActivity implements NavigationView
     private String mdp;
     private TextView user_statut;
     private String statut;
+
+    private ImageButton btnRetour;
+
     final String LOGIN_USER = "user_profile";
 
     @Override
@@ -91,6 +95,15 @@ public class AccountActivity extends AppCompatActivity implements NavigationView
         user_mdp.setText(mdp);
         statut = myPref.getString("statut_extra", statut);
         user_statut.setText(statut);
+
+        btnRetour = (ImageButton) findViewById(R.id.imageButtonBack);
+        btnRetour.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent back = new Intent(AccountActivity.this, MenuActivity.class);
+                startActivity(back);
+            }
+        });
     }
 
     @Override

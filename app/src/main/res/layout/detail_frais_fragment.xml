@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/titreDateFrais2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:text="Date du frais :"
+            android:textSize="25sp" />
+
+        <TextView
+            android:id="@+id/textDatefrais2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="2018-05-05"
+            android:textAlignment="center"
+            android:textSize="18sp" />
+
+    </LinearLayout>
+</android.support.constraint.ConstraintLayout>

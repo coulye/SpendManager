@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/titreDuree"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:text="Durée du trajet :"
+            android:textSize="25sp" />
+
+        <TextView
+            android:id="@+id/textDuree"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="00:01:30"
+            android:textAlignment="center"
+            android:textSize="18sp"/>
+
+        <TextView
+            android:id="@+id/titreVilleDepard"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:text="Ville de départ :"
+            android:textSize="25sp" />
+
+        <TextView
+            android:id="@+id/textVilleDepard"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Marseille"
+            android:textAlignment="center"
+            android:textSize="18sp"/>
+
+        <TextView
+            android:id="@+id/titreVilleArrivee"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:text="Ville d'arrivée :"
+            android:textSize="25sp" />
+
+        <TextView
+            android:id="@+id/textVilleArrivee"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Paris"
+            android:textAlignment="center"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/titreDateAller"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:text="Date d'aller :"
+            android:textSize="25sp" />
+
+        <TextView
+            android:id="@+id/textDateAller"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="2018-05-06"
+            android:textAlignment="center"
+            android:textSize="18sp"/>
+
+        <TextView
+            android:id="@+id/titreDateRetour"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:text="Date de retour :"
+            android:textSize="25sp" />
+
+        <TextView
+            android:id="@+id/textDateRetour"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="2018-05-09"
+            android:textAlignment="center"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/titreKilometre"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:text="Nombre de kilometres :"
+            android:textSize="25sp" />
+
+        <TextView
+            android:id="@+id/textKilometre"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="948 km"
+            android:textAlignment="center"
+            android:textSize="18sp" />
+
+    </LinearLayout>
+</android.support.constraint.ConstraintLayout>

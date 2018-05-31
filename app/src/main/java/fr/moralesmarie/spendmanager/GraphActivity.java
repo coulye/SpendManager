@@ -15,6 +15,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import org.json.JSONArray;
@@ -62,6 +63,8 @@ public class GraphActivity extends AppCompatActivity implements NavigationView.O
     private WebView webViewGraphMontant;
     private int idUtilisateur;
     private ArrayList<Depense> listDepenses;
+
+    private ImageButton btnRetour;
 	
 	final String LOGIN_USER = "user_profile";
 
@@ -177,6 +180,15 @@ public class GraphActivity extends AppCompatActivity implements NavigationView.O
                 "&chco=800000|A0522D|D2691E|DAA520|BC8F8F|DEB887|FFDEAD|FFEBCD|F0FFFF" +
                 "&chxt=x,y" +
                 "&chdl=Avion|Restaurant|Autoroute|Bus|Parking|Taxi|Hotel|Train|Essence");
+
+        btnRetour = (ImageButton) findViewById(R.id.imageButtonBack);
+        btnRetour.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent back = new Intent(GraphActivity.this, MenuActivity.class);
+                startActivity(back);
+            }
+        });
     }
 
     public ArrayList<Depense> listDepensesUtilisateur(int idUtilisateur){

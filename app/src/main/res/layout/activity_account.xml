@@ -224,6 +224,15 @@
             tools:layout_editor_absoluteX="16dp"
             tools:layout_editor_absoluteY="73dp">
 
+            <ImageButton
+                android:id="@+id/imageButtonBack"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/plus_button_background"
+                android:scaleType="fitCenter"
+                app:srcCompat="@drawable/ic_chevron_left_black_24dp" />
+
         </LinearLayout>
 
     </android.support.constraint.ConstraintLayout>

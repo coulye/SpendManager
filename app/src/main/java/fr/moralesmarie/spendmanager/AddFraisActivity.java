@@ -10,11 +10,16 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.FileProvider;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -43,6 +48,9 @@ import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -55,6 +63,8 @@ import fr.moralesmarie.spendmanager.Class.Frais;
 import fr.moralesmarie.spendmanager.Class.Justificatif;
 import fr.moralesmarie.spendmanager.Class.Notefrais;
 import fr.moralesmarie.spendmanager.Class.Trajet;
+import fr.moralesmarie.spendmanager.Fragment.FraisFragment;
+import fr.moralesmarie.spendmanager.Fragment.TrajetFragment;
 import fr.moralesmarie.spendmanager.HttpRequest.HttpGetRequest;
 import fr.moralesmarie.spendmanager.HttpRequest.HttpPostRequest;
 
@@ -71,21 +81,19 @@ public class AddFraisActivity extends AppCompatActivity implements NavigationVie
     private String months;
     private String days;
     private String years;
-    private EditText mDateExpense;
-    private String SQLDateExpense;
+
+    private FraisFragment theFraisFragment;
+    private TrajetFragment theTrajetFragment;
 
     private EditText dureeTrajet;
     private EditText villeDepard;
     private EditText villeArrivee;
-    private EditText mDateAller;
-    private String SQLDateAller;
-    private EditText mDateRetour;
-    private String SQLDateRetour;
     private EditText km;
     private EditText commentaire;
     private EditText montant;
 
     private ImageButton takePictureBtn;
+    private ImageButton btnRetour;
     private ImageButton addDepense;
     private Button sendNotefrais;
 
@@ -121,7 +129,7 @@ public class AddFraisActivity extends AppCompatActivity implements NavigationVie
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
-        
+
 		//menu nav header - info user
 		String mailuser = null;
         String coorduser = null;
@@ -166,14 +174,10 @@ public class AddFraisActivity extends AppCompatActivity implements NavigationVie
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
 
-        //POP-UP CALENDRIER
         mCurrentDate = Calendar.getInstance();
         final int year = mCurrentDate.get(Calendar.YEAR);
         final int month = mCurrentDate.get(Calendar.MONTH);
         final int day = mCurrentDate.get(Calendar.DAY_OF_MONTH);
-        mDateExpense = (EditText) findViewById(R.id.dateExpense);
-        mDateAller = (EditText) findViewById(R.id.dateAller);
-        mDateRetour = (EditText) findViewById(R.id.dateRetour);
         if(month >= 1 && month <= 9 ){
             months = "0" + (month+1);
         } else {
@@ -184,83 +188,7 @@ public class AddFraisActivity extends AppCompatActivity implements NavigationVie
         } else {
             days = "" + day;
         }
-        years = String.valueOf(year);
-        mDateExpense.setText(days + " - " + months + " - " + year);
-        mDateAller.setText(days + " - " + months + " - " + year);
-        mDateRetour.setText(days + " - " + months + " - " + year);
         mDate = year + "-" + months + "-" + days;
-        SQLDateExpense = year+"-"+months+"-"+days;
-        SQLDateAller = year+"-"+months+"-"+days;
-        SQLDateRetour = year+"-"+months+"-"+days;
-        mDateExpense.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                DatePickerDialog mDatePicker = new DatePickerDialog(AddFraisActivity.this, new DatePickerDialog.OnDateSetListener() {
-                    @Override
-                    public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-                        if(month >= 1 && month <= 9 ){
-                            months = "0" + (month+1);
-                        } else {
-                            months = "" + (month+1);
-                        }
-                        if(day >= 1 && day <= 9){
-                            days = "0" + day;
-                        } else {
-                            days = "" + day;
-                        }
-                        mDateExpense.setText(days + " - " + months + " - " + year);
-                        SQLDateExpense = year+"-"+months+"-"+days;
-                    }
-                }, year, month, day);
-                mDatePicker.show();
-            }
-        });
-        mDateAller.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                DatePickerDialog mDatePicker = new DatePickerDialog(AddFraisActivity.this, new DatePickerDialog.OnDateSetListener() {
-                    @Override
-                    public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-                        if(month >= 1 && month <= 9 ){
-                            months = "0" + (month+1);
-                        } else {
-                            months = "" + (month+1);
-                        }
-                        if(day >= 1 && day <= 9){
-                            days = "0" + day;
-                        } else {
-                            days = "" + day;
-                        }
-                        mDateAller.setText(days + " - " + months + " - " + year);
-                        SQLDateAller = year+"-"+months+"-"+days;
-                    }
-                }, year, month, day);
-                mDatePicker.show();
-            }
-        });
-        mDateRetour.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                DatePickerDialog mDatePicker = new DatePickerDialog(AddFraisActivity.this, new DatePickerDialog.OnDateSetListener() {
-                    @Override
-                    public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-                        if(month >= 1 && month <= 9 ){
-                            months = "0" + (month+1);
-                        } else {
-                            months = "" + (month+1);
-                        }
-                        if(day >= 1 && day <= 9){
-                            days = "0" + day;
-                        } else {
-                            days = "" + day;
-                        }
-                        mDateRetour.setText(days + " - " + months + " - " + year);
-                        SQLDateRetour = year+"-"+months+"-"+days;
-                    }
-                }, year, month, day);
-                mDatePicker.show();
-            }
-        });
 
         radioGroup = (RadioGroup) findViewById(R.id.radioGroupMotif);
 
@@ -279,6 +207,27 @@ public class AddFraisActivity extends AppCompatActivity implements NavigationVie
         listTrajet = new ArrayList<Trajet>();
         listJustificatif = new ArrayList<Justificatif>();
 
+        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                FragmentManager fragmentManager = getSupportFragmentManager();
+                FragmentTransaction transaction = fragmentManager.beginTransaction();
+                radioSelect = (RadioButton) findViewById(radioGroup.getCheckedRadioButtonId());
+                if (radioSelect.getText().toString().equals("Essence") || radioSelect.getText().toString().equals("Hotel") ||
+                        radioSelect.getText().toString().equals("Parking") || radioSelect.getText().toString().equals("Restaurant")) {
+                    theFraisFragment = new FraisFragment();
+                    transaction.replace(R.id.fragmentLayout, theFraisFragment);
+                } else if (radioSelect.getText().toString().equals("Train") || radioSelect.getText().toString().equals("Taxi") ||
+                        radioSelect.getText().toString().equals("Bus") || radioSelect.getText().toString().equals("Autoroute") ||
+                        radioSelect.getText().toString().equals("Avion")) {
+                    theTrajetFragment = new TrajetFragment();
+                    transaction.replace(R.id.fragmentLayout, theTrajetFragment);
+                }
+                transaction.commit();
+            }
+        });
+
+
         takePictureBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -291,11 +240,23 @@ public class AddFraisActivity extends AppCompatActivity implements NavigationVie
                             CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE
                     );
                 } else {
-                    takePictureIntent();
+                    try {
+                        takePictureIntent();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         });
 
+        btnRetour = (ImageButton) findViewById(R.id.imageButtonBack);
+        btnRetour.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent back = new Intent(AddFraisActivity.this, MenuActivity.class);
+                startActivity(back);
+            }
+        });
 
         addDepense.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -318,7 +279,7 @@ public class AddFraisActivity extends AppCompatActivity implements NavigationVie
                             radioSelect.getText().toString().equals("Parking") || radioSelect.getText().toString().equals("Restaurant")) {
                         idDepense = getRandom();
                         Frais leFrais = new Frais(
-                                SQLDateExpense,
+                                theFraisFragment.getSQLDateExpense(),
                                 idDepense,
                                 null,
                                 radioSelect.getText().toString(),
@@ -338,12 +299,12 @@ public class AddFraisActivity extends AppCompatActivity implements NavigationVie
                         } else {
                             idDepense = getRandom();
                             Trajet leTrajet = new Trajet(
-                                    dureeTrajet.getText().toString(),
-                                    villeDepard.getText().toString(),
-                                    villeArrivee.getText().toString(),
-                                    SQLDateAller,
-                                    SQLDateRetour,
-                                    Float.parseFloat(km.getText().toString()),
+                                    theTrajetFragment.getDureeTrajet(),
+                                    theTrajetFragment.getVilleDepard(),
+                                    theTrajetFragment.getVilleArrivee(),
+                                    theTrajetFragment.getSQLDateAller(),
+                                    theTrajetFragment.getSQLDateRetour(),
+                                    theTrajetFragment.getKm(),
                                     idDepense,
                                     null,
                                     radioSelect.getText().toString(),
@@ -354,8 +315,7 @@ public class AddFraisActivity extends AppCompatActivity implements NavigationVie
                             listTrajet.add(leTrajet);
                         }
                     }
-                    Bitmap bitmap = ((BitmapDrawable)mImageThumbnail.getDrawable()).getBitmap();
-                    String encodedImageData = getEncoded64ImageStringFromBitmap(bitmap);
+                    String encodedImageData = getEncoded64ImageStringFromBitmap();
                     Justificatif leJustificatif = new Justificatif(
                             0,
                             radioSelect.getText().toString()+mDate,
@@ -372,13 +332,6 @@ public class AddFraisActivity extends AppCompatActivity implements NavigationVie
                 if (radioGroup.getCheckedRadioButtonId() != -1) {
                     radioSelect.setChecked(false);
                 }
-                mDateExpense.setText(days + " - " + months + " - " + year);
-                dureeTrajet.setText("");
-                villeDepard.setText("");
-                villeArrivee.setText("");
-                mDateAller.setText(days + " - " + months + " - " + year);
-                mDateRetour.setText(days + " - " + months + " - " + year);
-                km.setText("");
                 montant.setText("");
             }
         });
@@ -403,7 +356,7 @@ public class AddFraisActivity extends AppCompatActivity implements NavigationVie
                                 radioSelect.getText().toString().equals("Parking") || radioSelect.getText().toString().equals("Restaurant")) {
                             idDepense = getRandom();
                             Frais leFrais = new Frais(
-                                    SQLDateExpense,
+                                    theFraisFragment.getSQLDateExpense(),
                                     idDepense,
                                     null,
                                     radioSelect.getText().toString(),
@@ -417,12 +370,12 @@ public class AddFraisActivity extends AppCompatActivity implements NavigationVie
                                 radioSelect.getText().toString().equals("Avion")) {
                             idDepense = getRandom();
                             Trajet leTrajet = new Trajet(
-                                    dureeTrajet.getText().toString(),
-                                    villeDepard.getText().toString(),
-                                    villeArrivee.getText().toString(),
-                                    SQLDateAller,
-                                    SQLDateRetour,
-                                    Float.parseFloat(km.getText().toString()),
+                                    theTrajetFragment.getDureeTrajet(),
+                                    theTrajetFragment.getVilleDepard(),
+                                    theTrajetFragment.getVilleArrivee(),
+                                    theTrajetFragment.getSQLDateAller(),
+                                    theTrajetFragment.getSQLDateRetour(),
+                                    theTrajetFragment.getKm(),
                                     idDepense,
                                     null,
                                     radioSelect.getText().toString(),
@@ -432,8 +385,7 @@ public class AddFraisActivity extends AppCompatActivity implements NavigationVie
                             );
                             listTrajet.add(leTrajet);
                         }
-                        Bitmap bitmap = ((BitmapDrawable)mImageThumbnail.getDrawable()).getBitmap();
-                        String encodedImageData = getEncoded64ImageStringFromBitmap(bitmap);
+                        String encodedImageData = getEncoded64ImageStringFromBitmap();
                         Justificatif leJustificatif = new Justificatif(
                                 0,
                                 radioSelect.getText().toString()+mDate,
@@ -467,13 +419,6 @@ public class AddFraisActivity extends AppCompatActivity implements NavigationVie
                         spinner.setSelection(0);
                         commentaire.setText("");
                         radioSelect.setChecked(false);
-                        mDateExpense.setText(days + " - " + months + " - " + year);
-                        dureeTrajet.setText("");
-                        villeDepard.setText("");
-                        villeArrivee.setText("");
-                        mDateAller.setText(days + " - " + months + " - " + year);
-                        mDateRetour.setText(days + " - " + months + " - " + year);
-                        km.setText("");
                         montant.setText("");
                         //remise à zero des collections de dépense
                         listFrais.clear();
@@ -484,14 +429,17 @@ public class AddFraisActivity extends AppCompatActivity implements NavigationVie
         });
     }
 
-    public String getEncoded64ImageStringFromBitmap(Bitmap bitmap) {
+    public String getEncoded64ImageStringFromBitmap() {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 70, stream);
+        Bitmap bitmap = ((BitmapDrawable) mImageThumbnail.getDrawable()).getBitmap();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 50, stream);
         byte[] byteFormat = stream.toByteArray();
-        String imgString = Base64.encodeToString(byteFormat, Base64.NO_WRAP);
+        String imgString = Base64.encodeToString(byteFormat, Base64.DEFAULT);
+
+        System.out.println("toto "+imgString);
 
         return imgString;
-    }
+}
 
     public int getRandom(){
         Random random = new Random();
@@ -656,7 +604,7 @@ public class AddFraisActivity extends AppCompatActivity implements NavigationVie
         return result;
     }
 
-    private void takePictureIntent() {
+    private void takePictureIntent() throws IOException {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         Log.v("Path image", this.getExternalFilesDir(Environment.DIRECTORY_DCIM).getAbsolutePath());
         imageUri = Uri.fromFile(new File(this.getExternalFilesDir(Environment.DIRECTORY_DCIM), "justificatif_" + String.valueOf(System.currentTimeMillis()) + ".jpg"));
@@ -664,6 +612,23 @@ public class AddFraisActivity extends AppCompatActivity implements NavigationVie
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
             startActivityForResult(takePictureIntent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
         }
+//        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+//        Log.v("Path image", this.getExternalFilesDir(Environment.DIRECTORY_DCIM).getAbsolutePath());
+//// Nécessaire pour les versions android API > 23 (à partir de la 7.0
+//        String fileName = "justificatif_" + String.valueOf(System.currentTimeMillis());
+//        File storageDic = this.getExternalFilesDir(Environment.DIRECTORY_DCIM);
+//        File storedImage = File.createTempFile(fileName, ".jpg", storageDic);
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+//            imageUri = FileProvider.getUriForFile(this, "net.mascaron.takepictureapp.fileProvider",
+//                    storedImage);
+//        } else {
+//            imageUri = Uri.fromFile(storedImage);
+//        }
+//        takePictureIntent.putExtra(android.provider.MediaStore.EXTRA_OUTPUT, imageUri);
+//        takePictureIntent.putExtra("maxPicturePixels", 3840 * 2160);
+//        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+//            startActivityForResult(takePictureIntent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
+//        }
     }
 
     @Override
@@ -671,16 +636,28 @@ public class AddFraisActivity extends AppCompatActivity implements NavigationVie
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
-                retrieveCapturedPicture();
+                try {
+                    retrieveCapturedPicture();
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }
 
-    private void retrieveCapturedPicture() {
+    private void retrieveCapturedPicture() throws FileNotFoundException {
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inPreferredConfig = Bitmap.Config.ARGB_8888;
         Bitmap bitmap = BitmapFactory.decodeFile(imageUri.getPath(), options);
         mImageThumbnail.setImageBitmap(bitmap);
+//        // display picture on ImageView or write path of image file into database SQLite
+//        InputStream ims = getContentResolver().openInputStream(imageUri);
+//        BitmapFactory.Options options = new BitmapFactory.Options();
+//        options.inPreferredConfig = Bitmap.Config.ARGB_8888;
+////Bitmap bitmap = BitmapFactory.decodeFile(imageUri.getPath(), options);
+//        Bitmap bitmap = BitmapFactory.decodeStream(ims);
+//        mImageThumbnail.setImageBitmap(bitmap);
+//        mImageThumbnail.setRotation(90);
     }
 
     @Override
