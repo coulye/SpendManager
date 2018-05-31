@@ -224,135 +224,10 @@
                     android:textSize="20dp"/>
             </RadioGroup>
 
-            <TextView
-                android:id="@+id/textFRAIS"
+            <FrameLayout
+                android:id="@+id/fragmentLayout"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="A COMPLETER EN CAS DE FRAIS :"
-                android:textAlignment="center"
-                android:textSize="24sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/textDateFrais"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingTop="20dp"
-                android:text="Date de la depense :"
-                android:textAlignment="center"
-                android:textSize="24sp" />
-
-            <EditText
-                android:id="@+id/dateExpense"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:focusableInTouchMode="false"
-                android:inputType="date"
-                android:textAlignment="center" />
-
-            <TextView
-                android:id="@+id/textTrajet"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="A COMPLETER EN CAS DE TRAJET :"
-                android:textAlignment="center"
-                android:textSize="24sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/textDureeTrajet"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Durée du Trajet :"
-                android:textAlignment="center"
-                android:textSize="24sp" />
-
-            <EditText
-                android:id="@+id/dureeTrajet"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:inputType="time" />
-
-            <TextView
-                android:id="@+id/textVilleDepart"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Ville de départ :"
-                android:textAlignment="center"
-                android:textSize="24sp" />
-
-            <EditText
-                android:id="@+id/villeDepart"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:inputType="textPersonName" />
-
-            <TextView
-                android:id="@+id/textVilleArrivee"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Ville d'arrivée :"
-                android:textAlignment="center"
-                android:textSize="24sp" />
-
-            <EditText
-                android:id="@+id/villeArrivee"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:inputType="textPersonName" />
-
-            <TextView
-                android:id="@+id/textDateAller"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Date d'aller du trajet :"
-                android:textAlignment="center"
-                android:textSize="24sp" />
-
-            <EditText
-                android:id="@+id/dateAller"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:focusableInTouchMode="false"
-                android:inputType="date"
-                android:textAlignment="center" />
-
-            <TextView
-                android:id="@+id/textDateRetour"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Date de retour du trajet :"
-                android:textAlignment="center"
-                android:textSize="24sp" />
-
-            <EditText
-                android:id="@+id/dateRetour"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:focusableInTouchMode="false"
-                android:inputType="date"
-                android:textAlignment="center" />
-
-            <TextView
-                android:id="@+id/textKilometre"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Nombre de kilometres (arondir a l'unité) :"
-                android:textAlignment="center"
-                android:textSize="24sp" />
-
-            <EditText
-                android:id="@+id/editKilometre"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:inputType="number" />
+                android:layout_height="match_parent"/>
 
             <LinearLayout
                 android:id="@+id/paiement"
@@ -439,6 +314,15 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="horizontal">
+
+            <ImageButton
+                android:id="@+id/imageButtonBack"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/plus_button_background"
+                android:scaleType="fitCenter"
+                app:srcCompat="@drawable/ic_chevron_left_black_24dp" />
 
             <ImageButton
                 android:id="@+id/imageAddDepense"

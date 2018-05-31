@@ -6,6 +6,8 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -16,6 +18,7 @@ import android.util.Base64;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -29,6 +32,8 @@ import java.util.concurrent.ExecutionException;
 import fr.moralesmarie.spendmanager.Class.Frais;
 import fr.moralesmarie.spendmanager.Class.Justificatif;
 import fr.moralesmarie.spendmanager.Class.Trajet;
+import fr.moralesmarie.spendmanager.Fragment.DetailFraisFragment;
+import fr.moralesmarie.spendmanager.Fragment.DetailTrajetFragment;
 import fr.moralesmarie.spendmanager.HttpRequest.HttpGetRequest;
 
 public class DetailDepenseActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -62,6 +67,8 @@ public class DetailDepenseActivity extends AppCompatActivity implements Navigati
     private TextView textDateRetour;
     private TextView titreKilometre;
     private TextView textKilometre;
+
+    private ImageButton btnRetour;
 
 	final String LOGIN_USER = "user_profile";
 
@@ -106,20 +113,20 @@ public class DetailDepenseActivity extends AppCompatActivity implements Navigati
         textMontant = (TextView) findViewById(R.id.textMontant);
         textIdNotefrais = (TextView) findViewById(R.id.textIdNotefrais);
         imageJustificatif = (ImageView) findViewById(R.id.imageJustificatif);
-        titreDateFrais = (TextView) findViewById(R.id.titreDateFrais2);
-        textDateFrais = (TextView) findViewById(R.id.textDatefrais2);
-        titreDuree = (TextView) findViewById(R.id.titreDuree);
-        textDuree = (TextView) findViewById(R.id.textDuree);
-        titreVilleDepard = (TextView) findViewById(R.id.titreVilleDepard);
-        textVilleDepard = (TextView) findViewById(R.id.textVilleDepard);
-        titreVilleArrivee = (TextView) findViewById(R.id.titreVilleArrivee);
-        textVilleArrivee = (TextView) findViewById(R.id.textVilleArrivee);
-        titreDateAller = (TextView) findViewById(R.id.titreDateAller);
-        textDateAller = (TextView) findViewById(R.id.textDateAller);
-        titreDateRetour = (TextView) findViewById(R.id.titreDateRetour);
-        textDateRetour = (TextView) findViewById(R.id.textDateRetour);
-        titreKilometre = (TextView) findViewById(R.id.titreKilometre);
-        textKilometre = (TextView) findViewById(R.id.textKilometre);
+//        titreDateFrais = (TextView) findViewById(R.id.titreDateFrais2);
+//        textDateFrais = (TextView) findViewById(R.id.textDatefrais2);
+//        titreDuree = (TextView) findViewById(R.id.titreDuree);
+//        textDuree = (TextView) findViewById(R.id.textDuree);
+//        titreVilleDepard = (TextView) findViewById(R.id.titreVilleDepard);
+//        textVilleDepard = (TextView) findViewById(R.id.textVilleDepard);
+//        titreVilleArrivee = (TextView) findViewById(R.id.titreVilleArrivee);
+//        textVilleArrivee = (TextView) findViewById(R.id.textVilleArrivee);
+//        titreDateAller = (TextView) findViewById(R.id.titreDateAller);
+//        textDateAller = (TextView) findViewById(R.id.textDateAller);
+//        titreDateRetour = (TextView) findViewById(R.id.titreDateRetour);
+//        textDateRetour = (TextView) findViewById(R.id.textDateRetour);
+//        titreKilometre = (TextView) findViewById(R.id.titreKilometre);
+//        textKilometre = (TextView) findViewById(R.id.textKilometre);
 
         Intent intentDepense = getIntent();
         idDepense = Integer.parseInt(intentDepense.getStringExtra("id_depense"));
@@ -164,50 +171,81 @@ public class DetailDepenseActivity extends AppCompatActivity implements Navigati
         textMontant.setText(montant + " €");
         textIdNotefrais.setText("Note de frais N° " + idNotefrais);
 
-        String encodedImageData = catchJustificatif(idDepense, idNotefrais);
-        if (!encodedImageData.equals("null")) {
-            byte[] imageBytes = Base64.decode(encodedImageData, Base64.DEFAULT);
-            Bitmap decodedImage = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);
-            imageJustificatif.setImageBitmap(decodedImage);
-        }
+//        String encodedImageData = catchJustificatif(idDepense, idNotefrais);
+//        System.out.println("toto "+encodedImageData);
+//        byte[] imageBytes = Base64.decode(encodedImageData, Base64.DEFAULT);
+//        Bitmap decodedImage = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);
+//        System.out.println("toto "+decodedImage);
+//        imageJustificatif.setImageBitmap(decodedImage);
 
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
         if (libelle.equals("Essence") || libelle.equals("Hotel") || libelle.equals("Parking") || libelle.equals("Restaurant")) {
             titreDepense.setText("Détails du Frais N° " + idDepense);
+
             Frais leFrais = catchFrais(idDepense);
-            titreDuree.setVisibility(View.INVISIBLE);
-            textDuree.setVisibility(View.INVISIBLE);
-            titreVilleDepard.setVisibility(View.INVISIBLE);
-            textVilleDepard.setVisibility(View.INVISIBLE);
-            titreVilleArrivee.setVisibility(View.INVISIBLE);
-            textVilleArrivee.setVisibility(View.INVISIBLE);
-            titreDateAller.setVisibility(View.INVISIBLE);
-            textDateAller.setVisibility(View.INVISIBLE);
-            titreDateRetour.setVisibility(View.INVISIBLE);
-            textDateRetour.setVisibility(View.INVISIBLE);
-            titreKilometre.setVisibility(View.INVISIBLE);
-            textKilometre.setVisibility(View.INVISIBLE);
-
-            textDateFrais.setText(leFrais.getDate_Frais());
+            DetailFraisFragment detailFraisFragment = new DetailFraisFragment();
+            detailFraisFragment.setStringDateFrais(leFrais.getDate_Frais());
+            transaction.replace(R.id.fragmentLayout, detailFraisFragment);
 
 
-        } else if (libelle.equals("Train") || libelle.equals("Taxi") || libelle.equals("Bus") || libelle.equals("Autoroute") || libelle.equals("Avion")) {
+//            titreDuree.setVisibility(View.INVISIBLE);
+//            textDuree.setVisibility(View.INVISIBLE);
+//            titreVilleDepard.setVisibility(View.INVISIBLE);
+//            textVilleDepard.setVisibility(View.INVISIBLE);
+//            titreVilleArrivee.setVisibility(View.INVISIBLE);
+//            textVilleArrivee.setVisibility(View.INVISIBLE);
+//            titreDateAller.setVisibility(View.INVISIBLE);
+//            textDateAller.setVisibility(View.INVISIBLE);
+//            titreDateRetour.setVisibility(View.INVISIBLE);
+//            textDateRetour.setVisibility(View.INVISIBLE);
+//            titreKilometre.setVisibility(View.INVISIBLE);
+//            textKilometre.setVisibility(View.INVISIBLE);
+
+//            textDateFrais.setText(leFrais.getDate_Frais());
+
+
+        } else if (libelle.equals("Train") || libelle.equals("Taxi") || libelle.equals("Bus") ||
+                libelle.equals("Autoroute") || libelle.equals("Avion")) {
             titreDepense.setText("Détails du Trajet N° " + idDepense);
-            Trajet leTrajet = catchTrajet(idDepense);
-            titreDateFrais.setVisibility(View.INVISIBLE);
-            textDateFrais.setVisibility(View.INVISIBLE);
 
-            textDuree.setText(leTrajet.getDuree_Trajet());
-            textVilleDepard.setText(leTrajet.getVilleDepart_Trajet());
-            textVilleArrivee.setText(leTrajet.getVilleArrivee_Trajet());
-            textDateAller.setText(leTrajet.getDateAller_Trajet());
-            textDateRetour.setText(leTrajet.getDateRetour_Trajet());
-            textKilometre.setText(String.valueOf(leTrajet.getKilometre_Trajet()));
+            Trajet leTrajet = catchTrajet(idDepense);
+            DetailTrajetFragment detailTrajetFragment = new DetailTrajetFragment();
+            detailTrajetFragment.setStringDuree(leTrajet.getDuree_Trajet());
+            detailTrajetFragment.setStringDateAller(leTrajet.getDateAller_Trajet());
+            detailTrajetFragment.setStringDateRetour(leTrajet.getDateRetour_Trajet());
+            detailTrajetFragment.setStringVilleDepard(leTrajet.getVilleDepart_Trajet());
+            detailTrajetFragment.setStringVilleArrivee(leTrajet.getVilleArrivee_Trajet());
+            detailTrajetFragment.setStringKilometre(String.valueOf(leTrajet.getKilometre_Trajet()));
+            transaction.replace(R.id.fragmentLayout, detailTrajetFragment);
+
+
+
+//            titreDateFrais.setVisibility(View.INVISIBLE);
+//            textDateFrais.setVisibility(View.INVISIBLE);
+
+//            textDuree.setText(leTrajet.getDuree_Trajet());
+//            textVilleDepard.setText(leTrajet.getVilleDepart_Trajet());
+//            textVilleArrivee.setText(leTrajet.getVilleArrivee_Trajet());
+//            textDateAller.setText(leTrajet.getDateAller_Trajet());
+//            textDateRetour.setText(leTrajet.getDateRetour_Trajet());
+//            textKilometre.setText(String.valueOf(leTrajet.getKilometre_Trajet()));
         }
+        transaction.commit();
+
+        btnRetour = (ImageButton) findViewById(R.id.imageButtonBack);
+        btnRetour.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent back = new Intent(DetailDepenseActivity.this, MenuActivity.class);
+                startActivity(back);
+            }
+        });
     }
 
     public String catchJustificatif (int idDepense, int idNotefrais){
         Justificatif leJustificatif = null;
-        String encodedImageDate = "";
+        String encodedImageData = "";
 
         String result = "";
         String myUrl = "http://moralesmarie.alwaysdata.net/public/notefrais/"+idNotefrais+"/depense/"+idDepense+"/justificatif";
@@ -223,22 +261,19 @@ public class DetailDepenseActivity extends AppCompatActivity implements Navigati
         }
         try {
             JSONObject jsonObject = new JSONObject(result);
-            if (String.valueOf(jsonObject.getInt("Id_Utilisateur")).equals("null")){
-                encodedImageDate =  "null";
-            } else {
-                leJustificatif = new Justificatif(
-                        jsonObject.getInt("Id_Justificatif"),
-                        jsonObject.getString("Titre_Justificatif"),
-                        jsonObject.getString("Url_Justificatif"),
-                        idDepense,
-                        idNotefrais
-                );
-                encodedImageDate = leJustificatif.getUrl_Justificatif();
-            }
+            leJustificatif = new Justificatif(
+                    jsonObject.getInt("Id_Justificatif"),
+                    jsonObject.getString("Titre_Justificatif"),
+                    jsonObject.getString("Url_Justificatif"),
+                    idDepense,
+                    idNotefrais
+            );
+            encodedImageData = leJustificatif.getUrl_Justificatif();
+
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        return encodedImageDate;
+        return encodedImageData;
     }
 
     public Frais catchFrais(int idDepense){

@@ -86,7 +86,7 @@ public class LoginActivity extends AppCompatActivity {
                 editor.putString("mail_extra", objLogin.getString("Mail_Utilisateur"));
                 editor.putString("mdp_extra", objLogin.getString("Mdp_Utilisateur"));
                 editor.putString("statut_extra", objLogin.getString("Statut_Utilisateur"));
-
+                editor.putInt("id_user", objLogin.getInt("Id_Utilisateur"));
 
                 editor.apply();
                 startActivity(i);

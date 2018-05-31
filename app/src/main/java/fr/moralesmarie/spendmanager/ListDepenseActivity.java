@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -35,6 +36,7 @@ public class ListDepenseActivity extends AppCompatActivity implements Navigation
     private int idNotefrais;
     private TableLayout table;
     private TextView textTitreDepense;
+    private ImageButton btnRetour;
 	
 	final String LOGIN_USER = "user_profile";
 
@@ -148,6 +150,14 @@ public class ListDepenseActivity extends AppCompatActivity implements Navigation
             table.addView(tr);
         }
 
+        btnRetour = (ImageButton) findViewById(R.id.imageButtonBack);
+        btnRetour.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent listNote = new Intent(ListDepenseActivity.this, MenuActivity.class);
+                startActivity(listNote);
+            }
+        });
     }
 
     public String etatRemboursement(int idDepense){

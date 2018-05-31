@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/textDureeTrajet"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Durée du Trajet :"
+            android:textAlignment="center"
+            android:textSize="24sp" />
+
+        <EditText
+            android:id="@+id/dureeTrajet"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="time" />
+
+        <TextView
+            android:id="@+id/textVilleDepart"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Ville de départ :"
+            android:textAlignment="center"
+            android:textSize="24sp" />
+
+        <EditText
+            android:id="@+id/villeDepart"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="textPersonName" />
+
+        <TextView
+            android:id="@+id/textVilleArrivee"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Ville d'arrivée :"
+            android:textAlignment="center"
+            android:textSize="24sp" />
+
+        <EditText
+            android:id="@+id/villeArrivee"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="textPersonName" />
+
+        <TextView
+            android:id="@+id/textDateAller"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Date d'aller du trajet :"
+            android:textAlignment="center"
+            android:textSize="24sp" />
+
+        <EditText
+            android:id="@+id/dateAller"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:focusableInTouchMode="false"
+            android:inputType="date"
+            android:textAlignment="center" />
+
+        <TextView
+            android:id="@+id/textDateRetour"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Date de retour du trajet :"
+            android:textAlignment="center"
+            android:textSize="24sp" />
+
+        <EditText
+            android:id="@+id/dateRetour"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:focusableInTouchMode="false"
+            android:inputType="date"
+            android:textAlignment="center" />
+
+        <TextView
+            android:id="@+id/textKilometre"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Nombre de kilometres (arondir a l'unité) :"
+            android:textAlignment="center"
+            android:textSize="24sp" />
+
+        <EditText
+            android:id="@+id/editKilometre"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="number" />
+
+    </LinearLayout>
+</android.support.constraint.ConstraintLayout>

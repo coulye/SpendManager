@@ -16,6 +16,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -42,6 +43,7 @@ public class AddClientActivity extends AppCompatActivity implements NavigationVi
 
     private String titre = "";
 
+    private ImageButton btnRetour;
     private Button btnValider;
 	
 	final String LOGIN_USER = "user_profile";
@@ -90,6 +92,15 @@ public class AddClientActivity extends AppCompatActivity implements NavigationVi
         tel = (EditText) findViewById(R.id.textTelEntreprise);
         mail = (EditText) findViewById(R.id.textMailEntreprise);
         raisonSociale = (EditText) findViewById(R.id.textRaisonSociale);
+
+        btnRetour = (ImageButton) findViewById(R.id.imageButtonBack);
+        btnRetour.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent back = new Intent(AddClientActivity.this, MenuActivity.class);
+                startActivity(back);
+            }
+        });
 
         btnValider = (Button) findViewById(R.id.btnValider);
         btnValider.setOnClickListener(new View.OnClickListener() {
