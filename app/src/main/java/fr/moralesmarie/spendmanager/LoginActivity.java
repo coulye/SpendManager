@@ -3,23 +3,18 @@ package fr.moralesmarie.spendmanager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.MailTo;
 import android.os.Bundle;
-import android.support.design.widget.NavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import org.json.JSONObject;
 
 import java.util.concurrent.ExecutionException;
 
-import fr.moralesmarie.spendmanager.AVoirAQuoiCaSert.BackgroundWorker;
-import fr.moralesmarie.spendmanager.AVoirAQuoiCaSert.OublieActivity;
 import fr.moralesmarie.spendmanager.HttpRequest.HttpPostRequest;
 
 public class LoginActivity extends AppCompatActivity {
