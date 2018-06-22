@@ -1,4 +1,4 @@
-package fr.moralesmarie.spendmanager.AVoirAQuoiCaSert;
+package fr.moralesmarie.spendmanager.Test;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
